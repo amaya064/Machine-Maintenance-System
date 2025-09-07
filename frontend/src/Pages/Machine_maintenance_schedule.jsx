@@ -73,8 +73,8 @@ export default function Machine_maintenance_schedule() {
         // Reset form
         setFormData({
           month: '',
-          department: '',
           machineName: '',
+          department: '',
           startDate: '',
           endDate: '',
           nextScheduleDate: '',
@@ -98,8 +98,8 @@ export default function Machine_maintenance_schedule() {
   ];
 
   const departments = [
-    'Maintenance', 'Production', 'Quality Control', 'Engineering',
-    'Operations', 'Technical Support', 'Facilities', 'Health & Safety'
+    'Finishing', 'Dyeing', 'Warping', 'Inspection',
+    'Weft Knitting', 'Warp Knitting', 'Printing', 'Utility'
   ];
 
   const frequencies = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Half-Yearly', 'Yearly'];
