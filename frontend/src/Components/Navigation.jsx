@@ -70,6 +70,29 @@ export default function Navigation() {
               </div>
               <span>Home</span>
             </Link>
+            <Link 
+              to="/EmployeeRegistration" 
+              className="flex items-center space-x-1.5 py-1.5 px-3 rounded-md hover:bg-gray-700 transition-colors group text-sm"
+              onClick={() => setMenuOpen(false)}
+            >
+              <div className="p-1 bg-gray-700 rounded group-hover:bg-teal-500 transition-colors">
+                <FaClipboardList className="text-teal-400 group-hover:text-white text-xs" />
+              </div>
+              <span>Register Employee</span>
+            </Link>
+
+            <Link 
+              to="/New_machine_registration" 
+              className="flex items-center space-x-1.5 py-1.5 px-3 rounded-md hover:bg-gray-700 transition-colors group text-sm"
+              onClick={() => setMenuOpen(false)}
+            >
+              <div className="p-1 bg-gray-700 rounded group-hover:bg-teal-500 transition-colors">
+                <FaClipboardList className="text-teal-400 group-hover:text-white text-xs" />
+              </div>
+              <span>Register Machine</span>
+            </Link>
+
+            
             
             {/* Always show these menu items regardless of login status */}
             <Link 
@@ -80,7 +103,7 @@ export default function Navigation() {
               <div className="p-1 bg-gray-700 rounded group-hover:bg-teal-500 transition-colors">
                 <FaClipboardList className="text-teal-400 group-hover:text-white text-xs" />
               </div>
-              <span>Schedule</span>
+              <span>Maintenance Schedule</span>
             </Link>
             
             <Link 
@@ -117,7 +140,7 @@ export default function Navigation() {
             </Link>
             
             <Link 
-              to="/pm-admin-tool" 
+              to="/Pm_admin_tool" 
               className="flex items-center space-x-1.5 py-1.5 px-3 rounded-md hover:bg-gray-700 transition-colors group text-sm"
               onClick={() => setMenuOpen(false)}
             >

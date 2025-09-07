@@ -12,6 +12,7 @@ import Machine_view from './Pages/machine_view'
 import EmployeeRegistration from './Pages/EmployeeRegistration'
 import Machine_maintenance_schedule from './Pages/Machine_maintenance_schedule'
 import View_Maintenance_Schedule from './Pages/View_Maintenance_Schedule'
+import Pm_admin_tool from './Pages/pm_admin_tool'
 
 export default function App() {
   return (
@@ -30,6 +31,9 @@ export default function App() {
       <Route path="/View_Maintenance_Schedule" element={<View_Maintenance_Schedule />} />
       <Route path="/employeeupdateprofile" element={<Employee_Update_profile />} />
       <Route path="/userview" element={<User_view />} />
+      
+      <Route path="/Pm_admin_tool" element={<Pm_admin_tool />} />
+
 
 
 

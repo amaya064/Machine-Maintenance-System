@@ -1,25 +1,25 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { 
-  FaUser, 
-  FaIdBadge, 
-  FaBuilding, 
-  FaUserTie, 
-  FaTools, 
+import {
+  FaUser,
+  FaIdBadge,
+  FaBuilding,
+  FaUserTie,
+  FaTools,
   FaSignInAlt,
   FaCog,
   FaCalendar,
-  FaIndustry
-} from 'react-icons/fa';
+  FaIndustry,
+} from "react-icons/fa";
 
 export default function EmployeeRegistration() {
   const [formData, setFormData] = useState({
-    name: '',
-    employeeId: '',
-    department: '',
-    position: '',
-    email: '',
-    phone: '',
+    name: "",
+    employeeId: "",
+    department: "",
+    position: "",
+    email: "",
+    phone: "",
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -27,14 +27,14 @@ export default function EmployeeRegistration() {
 
   // Department options
   const departments = [
-    'Maintenance',
-    'Production',
-    'Quality Control',
-    'Engineering',
-    'Operations',
-    'Technical Support',
-    'Facilities',
-    'Health & Safety'
+    "Maintenance",
+    "Production",
+    "Quality Control",
+    "Engineering",
+    "Operations",
+    "Technical Support",
+    "Facilities",
+    "Health & Safety",
   ];
 
   useEffect(() => {
@@ -49,14 +49,14 @@ export default function EmployeeRegistration() {
   };
 
   const generateEmployeeId = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let id = '';
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let id = "";
     for (let i = 0; i < 5; i++) {
       id += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     setFormData({
       ...formData,
-      employeeId: id
+      employeeId: id,
     });
   };
 
@@ -75,12 +75,12 @@ export default function EmployeeRegistration() {
       setLoading(false);
 
       if (!res.ok) {
-        setError(data.message || 'Registration failed. Please try again.');
+        setError(data.message || "Registration failed. Please try again.");
         return;
       }
 
       setError(null);
-      alert('Employee registered successfully!');
+      alert("Employee registered successfully!");
       navigate("/adminhome");
     } catch (error) {
       console.error("Error:", error.message);
@@ -93,68 +93,28 @@ export default function EmployeeRegistration() {
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
       <aside className="w-56 bg-gradient-to-br from-gray-800 to-gray-900 text-white shadow-xl">
-        {/* Profile Section */}
-        <div className="p-5 border-b border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center">
-              <img
-                src="src/images/profilelogo.png"
-                alt="Profile Icon"
-                className="rounded-full w-full h-full object-cover"
-              />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold">Admin</h2>
-              <p className="text-gray-400 text-xs">Machine Dashboard</p>
-            </div>
-          </div>
-        </div>
-
         {/* Navigation Menu */}
         <nav className="mt-5">
           <ul className="space-y-2">
-            
-            <li
-              className="flex items-center p-3 bg-gray-700 rounded-md cursor-pointer transition-all group"
-            >
-              <FaUser className="text-teal-300 text-sm mr-2" />
-              <span className="text-sm text-gray-200">Register Employee</span>
-            </li>
-            <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/New_machine_registration")}
-            >
-              <FaCog className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">Register Machine</span>
-            </li>
             <li
               className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
               onClick={() => navigate("/Machine_view")}
             >
               <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View Machines</span>
+              <span className="text-sm group-hover:text-gray-200">
+                View Machines
+              </span>
             </li>
+
             <li
               className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/technician-view")}
+              onClick={() => navigate("/View_Maintenance_Schedule")}
             >
-              <FaUser className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View Technicians</span>
+              <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+              <span className="text-sm group-hover:text-gray-200">
+                View Maintenance Schedule
+              </span>
             </li>
-            <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/Machine_maintenance_schedule")}
-            >
-              <FaCalendar className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">Maintenance Schedule</span>
-            </li>
-            <li
-                          className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-                          onClick={() => navigate("/View_Maintenance_Schedule")}
-                        >
-                          <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-                          <span className="text-sm group-hover:text-gray-200">View Maintenance Schedule</span>
-                        </li>
           </ul>
         </nav>
       </aside>
@@ -167,8 +127,12 @@ export default function EmployeeRegistration() {
             <div className="inline-flex items-center justify-center p-3 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl mb-3">
               <FaUser className="text-white text-lg" />
             </div>
-            <h1 className="text-xl font-bold text-gray-800 mb-1">Employee Registration</h1>
-            <p className="text-gray-600 text-xs">Register new team members for machine maintenance</p>
+            <h1 className="text-xl font-bold text-gray-800 mb-1">
+              Employee Registration
+            </h1>
+            <p className="text-gray-600 text-xs">
+              Register new team members for machine maintenance
+            </p>
           </div>
 
           {/* Error Display */}
@@ -285,11 +249,11 @@ export default function EmployeeRegistration() {
               <button
                 type="submit"
                 className={`w-full p-2 text-white bg-gradient-to-r from-teal-500 to-cyan-500 rounded-lg text-xs hover:from-teal-600 hover:to-cyan-600 transition-all ${
-                  loading ? 'opacity-50 cursor-not-allowed' : ''
+                  loading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={loading}
               >
-                {loading ? 'Registering Employee...' : 'Register Employee'}
+                {loading ? "Registering Employee..." : "Register Employee"}
               </button>
             </form>
           </div>
