@@ -56,7 +56,6 @@ export default function View_Maintenance_Schedule() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this schedule?')) {
       try {
-        // FIXED: Changed the API endpoint to the correct one
         await axios.delete(`http://localhost:3000/api/machines/schedules/${id}`);
         setSchedules(schedules.filter(schedule => schedule._id !== id));
         alert('Schedule deleted successfully!');
@@ -65,6 +64,16 @@ export default function View_Maintenance_Schedule() {
         alert('Failed to delete schedule.');
       }
     }
+  };
+
+  const handleEdit = (schedule) => {
+    // Navigate to the edit page with the schedule data
+    navigate('/Machine_maintenance_schedule', { 
+      state: { 
+        editMode: true, 
+        scheduleData: schedule 
+      } 
+    });
   };
 
   if (loading) {
@@ -256,7 +265,7 @@ export default function View_Maintenance_Schedule() {
                         <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">
                             <button
-                              onClick={() => {/* Handle edit */}}
+                              onClick={() => handleEdit(schedule)}
                               className="text-blue-600 hover:text-blue-900 p-1"
                               title="Edit"
                             >

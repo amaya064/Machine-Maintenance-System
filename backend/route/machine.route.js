@@ -1,5 +1,5 @@
 import express from 'express';
-import { createMaintenanceSchedule, deleteMachine, deleteMaintenanceSchedule, getAllMachines, getAllMaintenanceSchedules, registerMachine, updateMachine } from '../controller/machine.controller.js';
+import { createMaintenanceSchedule, deleteMachine, deleteMaintenanceSchedule, getAllMachines, getAllMaintenanceSchedules, registerMachine, updateMachine, updateMaintenanceSchedule } from '../controller/machine.controller.js';
 
 const router = express.Router();
 
@@ -11,5 +11,6 @@ router.post('/create', createMaintenanceSchedule);
 router.put('/:id', updateMachine);
 router.get('/schedules', getAllMaintenanceSchedules);
 router.delete('/schedules/:id', deleteMaintenanceSchedule);
+router.put('/schedules/:id', updateMaintenanceSchedule);
 
 export default router;
