@@ -106,7 +106,7 @@ export default function Machine_maintenance_schedule() {
   
   const pmTeams = Array.from({length: 20}, (_, i) => `PMT-${(i + 1).toString().padStart(2, '0')}`);
   
-  const checkTypes = ['A-Check', 'B-Check', 'C-Check'];
+  const checkTypes = ['A-Check', 'B-Check', 'C-Check','D-Check','E-Check','F-Check','G-Check','H-Check','I-Check','J-Check','K-Check','Annual MTC'];
 
   return (
     <div className="flex min-h-screen bg-gray-50">
