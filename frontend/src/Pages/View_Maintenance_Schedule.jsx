@@ -56,7 +56,8 @@ export default function View_Maintenance_Schedule() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this schedule?')) {
       try {
-        await axios.delete(`http://localhost:3000/api/machines/${id}`);
+        // FIXED: Changed the API endpoint to the correct one
+        await axios.delete(`http://localhost:3000/api/machines/schedules/${id}`);
         setSchedules(schedules.filter(schedule => schedule._id !== id));
         alert('Schedule deleted successfully!');
       } catch (error) {
