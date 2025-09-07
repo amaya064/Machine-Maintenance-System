@@ -31,18 +31,7 @@ export default function Navigation() {
   return (
     <nav className="bg-gradient-to-r from-gray-800 to-gray-900 text-white px-4 py-3 shadow-xl border-b border-gray-700 relative">
       <div className="container mx-auto flex justify-between items-center">
-        {/* Logo - Compact Version */}
-        <Link to="/" className="flex items-center space-x-2 group">
-          <div className="bg-gradient-to-r from-teal-500 to-cyan-500 p-1.5 rounded-md group-hover:from-teal-400 group-hover:to-cyan-400 transition-all duration-300 shadow-sm">
-            <FaTools className="text-lg text-white" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-lg font-bold tracking-tight">
-              <span className="text-teal-400">M</span>M
-            </span>
-            <span className="text-[10px] text-gray-400 -mt-1">Industrial</span>
-          </div>
-        </Link>
+        
 
         {/* Mobile menu toggle */}
         <button
