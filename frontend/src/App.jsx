@@ -13,6 +13,7 @@ import EmployeeRegistration from './Pages/EmployeeRegistration'
 import Machine_maintenance_schedule from './Pages/Machine_maintenance_schedule'
 import View_Maintenance_Schedule from './Pages/View_Maintenance_Schedule'
 import Pm_admin_tool from './Pages/pm_admin_tool'
+import PM_Post_Evaluation from './Pages/PM_Post_Evaluation'
 
 export default function App() {
   return (
@@ -33,7 +34,8 @@ export default function App() {
       <Route path="/userview" element={<User_view />} />
       
       <Route path="/Pm_admin_tool" element={<Pm_admin_tool />} />
-
+      <Route path="/PM_Post_Evaluation" element={<PM_Post_Evaluation />} />
+      
 
 
 
