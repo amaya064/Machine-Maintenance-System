@@ -1,5 +1,4 @@
 import Machine from '../model/Machine.model.js';
-import User from '../model/employee.model.js';
 import MaintenanceSchedule from '../model/MaintenanceSchedule.model.js';
 
 // Register a new employee
@@ -392,80 +391,5 @@ export const updateMachine = async (req, res) => {
       message: 'Server error', 
       error: error.message 
     });
-  }
-};
-
-
-// Company Login Controller
-export const companyLogin = async (req, res) => {
-  const { companyNumber, name, section } = req.body;
-
-  try {
-    if (!companyNumber || !name || !section) {
-      return res.status(400).json({
-        success: false,
-        message: 'Company number, name, and section are required',
-      });
-    }
-
-    console.log('Login attempt with:', companyNumber, name, section);
-    const employee = await Employee.findOne({ companyNumber, name, section });
-    console.log('Found employee:', employee);
-
-    if (!employee) {
-      return res.status(404).json({
-        success: false,
-        message: 'Invalid credentials or incorrect section',
-      });
-    }
-    res.status(200).json({
-      success: true,
-      message: 'Login successful',
-      employee,
-    });
-  } catch (error) {
-    console.error('Error in companyLogin:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error',
-      error: error.message,
-    });
-  }
-};
-
-// Get all users
-export const getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json({ success: true, data: users });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error', error: error.message });
-  }
-};
-
-
-// Delete a user by ID
-export const deleteUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const user = await User.findById(id);
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
-    await User.findByIdAndDelete(id);
-    res.status(200).json({ success: true, message: 'User removed successfully' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error', error: error.message });
-  }
-};
-
-
-// Controller to get the count of employees
-export const getEmployeeCount = async (req, res) => {
-  try {
-    const count = await Employee.countDocuments();
-    res.json({ count });
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching employee count" });
   }
 };

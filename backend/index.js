@@ -8,6 +8,7 @@ import machineRouter from './route/machine.route.js';
 import productRouter from './route/product.route.js';
 import paymentRouter from './route/payment.route.js';
 import orderRouter from './route/order.route.js';
+import breakdownRoutes from './route/breakdown.route.js';
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use('/api/products', productRouter);
 app.use('/api/payment', paymentRouter);
 
 app.use('/api/orders', orderRouter);
+app.use('/api/breakdowns', breakdownRoutes);
 
 
 
