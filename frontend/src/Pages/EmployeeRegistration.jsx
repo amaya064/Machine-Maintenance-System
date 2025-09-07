@@ -148,6 +148,13 @@ export default function EmployeeRegistration() {
               <FaCalendar className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
               <span className="text-sm group-hover:text-gray-200">Maintenance Schedule</span>
             </li>
+            <li
+                          className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
+                          onClick={() => navigate("/View_Maintenance_Schedule")}
+                        >
+                          <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+                          <span className="text-sm group-hover:text-gray-200">View Maintenance Schedule</span>
+                        </li>
           </ul>
         </nav>
       </aside>

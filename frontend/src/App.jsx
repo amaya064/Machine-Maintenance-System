@@ -11,6 +11,7 @@ import New_machine_registration from './Pages/New_machine_registration'
 import Machine_view from './Pages/machine_view'
 import EmployeeRegistration from './Pages/EmployeeRegistration'
 import Machine_maintenance_schedule from './Pages/Machine_maintenance_schedule'
+import View_Maintenance_Schedule from './Pages/View_Maintenance_Schedule'
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
       <Route path="/New_machine_registration/:id?" element={<New_machine_registration />} />
       <Route path="/Machine_view" element={<Machine_view />} />
       <Route path="/Machine_maintenance_schedule" element={<Machine_maintenance_schedule />} />
+      <Route path="/View_Maintenance_Schedule" element={<View_Maintenance_Schedule />} />
       <Route path="/employeeupdateprofile" element={<Employee_Update_profile />} />
       <Route path="/userview" element={<User_view />} />
 
