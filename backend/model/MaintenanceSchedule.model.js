@@ -11,7 +11,7 @@ const maintenanceScheduleSchema = new mongoose.Schema(
     department: { 
       type: String, 
       required: true,
-      enum: ['Maintenance', 'Production', 'Quality Control', 'Engineering', 'Operations', 'Technical Support', 'Facilities', 'Health & Safety']
+      enum: ['Finishing', 'Dyeing', 'Warping', 'Inspection', 'Weft Knitting', 'Warp Knitting', 'Printing', 'Utility']
     },
     machineName: { 
       type: String, 
