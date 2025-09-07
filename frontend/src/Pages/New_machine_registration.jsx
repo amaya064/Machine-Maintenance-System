@@ -142,7 +142,7 @@ export default function New_machine_registration() {
               onClick={() => navigate("/EmployeeRegistration")}
             >
               <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">Register Employee</span>
+              <span className="text-sm group-hover:text-gray-200">Register Employees</span>
             </li>
             <li
               className="flex items-center p-3 bg-gray-700 rounded-md cursor-pointer transition-all group"
