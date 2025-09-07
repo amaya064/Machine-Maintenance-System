@@ -88,22 +88,7 @@ export default function Machine_view() {
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
       <aside className="w-56 bg-gradient-to-br from-gray-800 to-gray-900 text-white shadow-xl">
-        {/* Profile Section */}
-        <div className="p-5 border-b border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center">
-              <img
-                src="src/images/profilelogo.png"
-                alt="Profile Icon"
-                className="rounded-full w-full h-full object-cover"
-              />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold">Admin</h2>
-              <p className="text-gray-400 text-xs">Machine Dashboard</p>
-            </div>
-          </div>
-        </div>
+
 
         {/* Navigation Menu */}
         <nav className="mt-5">

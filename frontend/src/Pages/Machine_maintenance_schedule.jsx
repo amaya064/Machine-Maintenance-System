@@ -167,44 +167,22 @@ export default function Machine_maintenance_schedule() {
           <ul className="space-y-2">
             <li
               className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/EmployeeRegistration")}
-            >
-              <FaUser className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">Register Employee</span>
-            </li>
-            <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/New_machine_registration")}
-            >
-              <FaCog className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">Register Machine</span>
-            </li>
-            <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
               onClick={() => navigate("/Machine_view")}
             >
               <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View Machines</span>
+              <span className="text-sm group-hover:text-gray-200">
+                View Machines
+              </span>
             </li>
-            <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/technician-view")}
-            >
-              <FaUser className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View Technicians</span>
-            </li>
-            <li
-              className="flex items-center p-3 bg-gray-700 rounded-md cursor-pointer transition-all group"
-            >
-              <FaCalendar className="text-teal-300 text-sm mr-2" />
-              <span className="text-sm text-gray-200">Maintenance Schedule</span>
-            </li>
+
             <li
               className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
               onClick={() => navigate("/View_Maintenance_Schedule")}
             >
               <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View Maintenance Schedule</span>
+              <span className="text-sm group-hover:text-gray-200">
+                View Maintenance Schedule
+              </span>
             </li>
           </ul>
         </nav>

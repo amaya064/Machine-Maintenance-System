@@ -13,7 +13,7 @@ import {
   FaExclamationTriangle,
   FaIndustry,
   FaPlusCircle,
-  FaSave
+  FaSave,
 } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -30,7 +30,7 @@ export default function New_machine_registration() {
     prNumber: "",
     poNumber: "",
     manufactureDate: "",
-    installationDate: ""
+    installationDate: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -47,8 +47,8 @@ export default function New_machine_registration() {
     try {
       setLoading(true);
       const response = await axios.get(`http://localhost:3000/api/machines`);
-      const machine = response.data.data.find(m => m._id === id);
-      
+      const machine = response.data.data.find((m) => m._id === id);
+
       if (machine) {
         setFormData({
           machineName: machine.machineName || "",
@@ -58,12 +58,16 @@ export default function New_machine_registration() {
           serialNumber: machine.serialNumber || "",
           prNumber: machine.prNumber || "",
           poNumber: machine.poNumber || "",
-          manufactureDate: machine.manufactureDate ? new Date(machine.manufactureDate).toISOString().split('T')[0] : "",
-          installationDate: machine.installationDate ? new Date(machine.installationDate).toISOString().split('T')[0] : ""
+          manufactureDate: machine.manufactureDate
+            ? new Date(machine.manufactureDate).toISOString().split("T")[0]
+            : "",
+          installationDate: machine.installationDate
+            ? new Date(machine.installationDate).toISOString().split("T")[0]
+            : "",
         });
       }
     } catch (error) {
-      console.error('Error fetching machine data:', error);
+      console.error("Error fetching machine data:", error);
       setError("Failed to load machine data");
     } finally {
       setLoading(false);
@@ -79,7 +83,7 @@ export default function New_machine_registration() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    
+
     try {
       if (isEditMode) {
         // Update existing machine
@@ -88,12 +92,12 @@ export default function New_machine_registration() {
           formData,
           {
             headers: {
-              'Content-Type': 'application/json'
+              "Content-Type": "application/json",
             },
-            timeout: 10000
+            timeout: 10000,
           }
         );
-        
+
         alert(response.data.message);
         navigate("/Machine_view");
       } else {
@@ -103,24 +107,28 @@ export default function New_machine_registration() {
           formData,
           {
             headers: {
-              'Content-Type': 'application/json'
+              "Content-Type": "application/json",
             },
-            timeout: 10000
+            timeout: 10000,
           }
         );
-        
+
         alert(response.data.message);
         navigate("/Machine_view");
       }
     } catch (error) {
-      console.error('Submission error:', error);
-      
+      console.error("Submission error:", error);
+
       if (error.response) {
         setError(error.response.data.message || "Operation failed");
         alert(error.response.data.message || "Operation failed");
       } else if (error.request) {
-        setError("No response from server. Please check if the server is running.");
-        alert("No response from server. Please check if the server is running.");
+        setError(
+          "No response from server. Please check if the server is running."
+        );
+        alert(
+          "No response from server. Please check if the server is running."
+        );
       } else {
         setError(error.message || "Something went wrong");
         alert(error.message || "Something went wrong");
@@ -139,45 +147,23 @@ export default function New_machine_registration() {
           <ul className="space-y-2">
             <li
               className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/EmployeeRegistration")}
-            >
-              <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">Register Employees</span>
-            </li>
-            <li
-              className="flex items-center p-3 bg-gray-700 rounded-md cursor-pointer transition-all group"
-            >
-              <FaCog className="text-teal-300 text-sm mr-2" />
-              <span className="text-sm text-gray-200">{isEditMode ? 'Update Machine' : 'Register Machine'}</span>
-            </li>
-            <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
               onClick={() => navigate("/Machine_view")}
             >
               <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View Machines</span>
+              <span className="text-sm group-hover:text-gray-200">
+                View Machines
+              </span>
             </li>
+
             <li
               className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/technician-view")}
+              onClick={() => navigate("/View_Maintenance_Schedule")}
             >
-              <FaUser className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View Employees</span>
+              <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+              <span className="text-sm group-hover:text-gray-200">
+                View Maintenance Schedule
+              </span>
             </li>
-            <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/Machine_maintenance_schedule")}
-            >
-              <FaCalendar className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">Maintenance Schedule</span>
-            </li>
-            <li
-                          className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-                          onClick={() => navigate("/View_Maintenance_Schedule")}
-                        >
-                          <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-                          <span className="text-sm group-hover:text-gray-200">View Maintenance Schedule</span>
-                        </li>
           </ul>
         </nav>
       </aside>
@@ -191,10 +177,12 @@ export default function New_machine_registration() {
               <FaIndustry className="text-white text-xl" />
             </div>
             <h1 className="text-2xl font-bold text-gray-800 mb-2">
-              {isEditMode ? 'Update Machine' : 'Register New Machine'}
+              {isEditMode ? "Update Machine" : "Register New Machine"}
             </h1>
             <p className="text-gray-600 text-sm">
-              {isEditMode ? 'Update existing industrial equipment' : 'Add new industrial equipment to your maintenance system'}
+              {isEditMode
+                ? "Update existing industrial equipment"
+                : "Add new industrial equipment to your maintenance system"}
             </p>
           </div>
 
@@ -366,7 +354,7 @@ export default function New_machine_registration() {
                 {loading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    {isEditMode ? 'Updating...' : 'Registering...'}
+                    {isEditMode ? "Updating..." : "Registering..."}
                   </>
                 ) : (
                   <>
