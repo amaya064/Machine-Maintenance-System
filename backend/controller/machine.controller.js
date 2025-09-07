@@ -262,6 +262,88 @@ export const deleteMaintenanceSchedule = async (req, res) => {
 };
 
 
+export const updateMaintenanceSchedule = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      month,
+      department,
+      machineName,
+      startDate,
+      endDate,
+      nextScheduleDate,
+      frequency,
+      pmTeam,
+      checkType
+    } = req.body;
+
+    // Validate required fields
+    const requiredFields = [
+      'month', 'department', 'machineName', 'startDate', 
+      'endDate', 'nextScheduleDate', 'frequency', 'pmTeam', 'checkType'
+    ];
+    
+    const missingFields = requiredFields.filter(field => !req.body[field]);
+    
+    if (missingFields.length > 0) {
+      return res.status(400).json({ 
+        success: false, 
+        message: `Missing required fields: ${missingFields.join(', ')}` 
+      });
+    }
+
+    // Check if schedule exists
+    const schedule = await MaintenanceSchedule.findById(id);
+    if (!schedule) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Maintenance schedule not found' 
+      });
+    }
+
+    // Update the schedule
+    const updatedSchedule = await MaintenanceSchedule.findByIdAndUpdate(
+      id,
+      {
+        month,
+        department,
+        machineName,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        nextScheduleDate: new Date(nextScheduleDate),
+        frequency,
+        pmTeam,
+        checkType
+      },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Maintenance schedule updated successfully', 
+      data: updatedSchedule 
+    });
+  } catch (error) {
+    console.error('Maintenance schedule update error:', error);
+    
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Validation error', 
+        errors 
+      });
+    }
+    
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+};
+
+
 export const updateMachine = async (req, res) => {
   try {
     const { id } = req.params;

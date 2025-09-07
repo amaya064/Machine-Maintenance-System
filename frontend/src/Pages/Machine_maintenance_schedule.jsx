@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   FaCalendar, 
   FaTools, 
@@ -17,8 +17,11 @@ import {
 
 export default function Machine_maintenance_schedule() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [machines, setMachines] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [scheduleId, setScheduleId] = useState('');
   const [formData, setFormData] = useState({
     month: '',
     department: '',
@@ -30,6 +33,32 @@ export default function Machine_maintenance_schedule() {
     pmTeam: '',
     checkType: ''
   });
+
+  // Check if we're in edit mode
+  useEffect(() => {
+    if (location.state && location.state.editMode && location.state.scheduleData) {
+      setEditMode(true);
+      setScheduleId(location.state.scheduleData._id);
+      
+      // Format dates for input fields
+      const formatDateForInput = (dateString) => {
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0];
+      };
+
+      setFormData({
+        month: location.state.scheduleData.month,
+        department: location.state.scheduleData.department,
+        machineName: location.state.scheduleData.machineName,
+        startDate: formatDateForInput(location.state.scheduleData.startDate),
+        endDate: formatDateForInput(location.state.scheduleData.endDate),
+        nextScheduleDate: formatDateForInput(location.state.scheduleData.nextScheduleDate),
+        frequency: location.state.scheduleData.frequency,
+        pmTeam: location.state.scheduleData.pmTeam,
+        checkType: location.state.scheduleData.checkType
+      });
+    }
+  }, [location.state]);
 
   // Fetch machines from database
   useEffect(() => {
@@ -58,18 +87,33 @@ export default function Machine_maintenance_schedule() {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        'http://localhost:3000/api/machines/create',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'application/json'
+      let response;
+      if (editMode) {
+        // Update existing schedule
+        response = await axios.put(
+          `http://localhost:3000/api/machines/schedules/${scheduleId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            }
           }
-        }
-      );
+        );
+      } else {
+        // Create new schedule
+        response = await axios.post(
+          'http://localhost:3000/api/machines/create',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+      }
 
       if (response.data.success) {
-        alert('Maintenance schedule created successfully!');
+        alert(`Maintenance schedule ${editMode ? 'updated' : 'created'} successfully!`);
         // Reset form
         setFormData({
           month: '',
@@ -82,10 +126,15 @@ export default function Machine_maintenance_schedule() {
           pmTeam: '',
           checkType: ''
         });
+        
+        // Navigate back to view page after successful update
+        if (editMode) {
+          navigate('/View_Maintenance_Schedule');
+        }
       }
     } catch (error) {
-      console.error('Error creating maintenance schedule:', error);
-      alert(error.response?.data?.message || 'Failed to create maintenance schedule');
+      console.error(`Error ${editMode ? 'updating' : 'creating'} maintenance schedule:`, error);
+      alert(error.response?.data?.message || `Failed to ${editMode ? 'update' : 'create'} maintenance schedule`);
     } finally {
       setLoading(false);
     }
@@ -170,10 +219,10 @@ export default function Machine_maintenance_schedule() {
               <FaCalendar className="text-white text-lg" />
             </div>
             <h1 className="text-xl font-bold text-gray-800 mb-1">
-              Machine Maintenance Schedule
+              {editMode ? 'Edit Maintenance Schedule' : 'Machine Maintenance Schedule'}
             </h1>
             <p className="text-gray-600 text-xs">
-              Schedule and manage machine maintenance activities
+              {editMode ? 'Update machine maintenance details' : 'Schedule and manage machine maintenance activities'}
             </p>
           </div>
 
@@ -356,7 +405,7 @@ export default function Machine_maintenance_schedule() {
                   className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-2 px-3 rounded-lg hover:from-teal-600 hover:to-cyan-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-xs"
                 >
                   <FaSave className="mr-1 text-xs" />
-                  {loading ? 'Saving...' : 'Save Schedule'}
+                  {loading ? (editMode ? 'Updating...' : 'Saving...') : (editMode ? 'Update Schedule' : 'Save Schedule')}
                 </button>
               </div>
             </form>
