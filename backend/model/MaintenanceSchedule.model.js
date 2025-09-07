@@ -42,7 +42,7 @@ const maintenanceScheduleSchema = new mongoose.Schema(
     checkType: { 
       type: String, 
       required: true,
-      enum: ['A-Check', 'B-Check', 'C-Check']
+      enum: ['A-Check', 'B-Check', 'C-Check','D-Check','E-Check','F-Check','G-Check','H-Check','I-Check','J-Check','K-Check','Annual MTC']
     }
   },
   { timestamps: true }
