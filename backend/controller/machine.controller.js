@@ -220,9 +220,39 @@ export const createMaintenanceSchedule = async (req, res) => {
 export const getAllMaintenanceSchedules = async (req, res) => {
   try {
     const schedules = await MaintenanceSchedule.find().sort({ createdAt: -1 });
-    res.status(200).json({ success: true, data: schedules });
+    res.status(200).json({ 
+      success: true, 
+      data: schedules 
+    });
   } catch (error) {
     console.error('Error fetching maintenance schedules:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+};
+
+export const deleteMaintenanceSchedule = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const schedule = await MaintenanceSchedule.findByIdAndDelete(id);
+    
+    if (!schedule) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Maintenance schedule not found' 
+      });
+    }
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Maintenance schedule deleted successfully' 
+    });
+  } catch (error) {
+    console.error('Error deleting maintenance schedule:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Server error', 
