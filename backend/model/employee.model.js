@@ -10,10 +10,6 @@ const employeeSchema = new mongoose.Schema({
     required: true, 
     unique: true 
   },
-  department: { 
-    type: String, 
-    required: true 
-  },
   position: { 
     type: String, 
     required: true, 

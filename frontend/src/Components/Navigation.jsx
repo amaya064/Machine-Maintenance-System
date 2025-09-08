@@ -86,7 +86,7 @@ export default function Navigation() {
             </Link>
             
             <Link 
-              to="/pm-team-view" 
+              to="/View_PM_Team_Leave" 
               className="flex items-center space-x-1.5 py-1.5 px-3 rounded-md hover:bg-gray-700 transition-colors group text-sm"
               onClick={() => setMenuOpen(false)}
             >
