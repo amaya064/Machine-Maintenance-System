@@ -3,33 +3,37 @@ import Employee from '../model/Employee.model.js'; // Fix this import
 
 export const registerEmployee = async (req, res, next) => {
   console.log("Employee registration request received with data:", req.body);
-  const { name, employeeId, department, position, email, phone } = req.body;
+  const { name, epfNumber, department, position } = req.body;
+
+  // Validation
+  if (!name || !epfNumber || !department || !position) {
+    return res.status(400).json({ 
+      success: false,
+      message: 'All fields are required: name, EPF number, department, and position.' 
+    });
+  }
 
   try {
-    // Check if employee ID already exists
-    const existingEmployeeById = await Employee.findOne({ employeeId });
-    if (existingEmployeeById) {
-      return res.status(400).json({ message: 'Employee ID already in use.' });
-    }
-
-    // Check if email already exists
-    const existingEmployeeByEmail = await Employee.findOne({ email });
-    if (existingEmployeeByEmail) {
-      return res.status(400).json({ message: 'Email already in use.' });
+    // Check if EPF number already exists
+    const existingEmployee = await Employee.findOne({ epfNumber });
+    if (existingEmployee) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'EPF number already in use.' 
+      });
     }
 
     // Create new employee
     const newEmployee = new Employee({
       name,
-      employeeId,
+      epfNumber,
       department,
-      position,
-      email,
-      phone
+      position
     });
 
     await newEmployee.save();
     console.log("Employee created successfully!");
+    
     res.status(201).json({ 
       success: true, 
       message: 'Employee registered successfully!',
@@ -37,6 +41,29 @@ export const registerEmployee = async (req, res, next) => {
     });
   } catch (error) {
     console.error("Employee registration error:", error);
-    next(error);
+    
+    // Handle duplicate key error
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: 'EPF number already exists in the system.'
+      });
+    }
+    
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map(val => val.message);
+      return res.status(400).json({
+        success: false,
+        message: 'Validation error',
+        errors: errors
+      });
+    }
+    
+    // Generic server error
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error. Please try again later.'
+    });
   }
 };

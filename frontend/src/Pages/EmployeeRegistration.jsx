@@ -15,11 +15,9 @@ import {
 export default function EmployeeRegistration() {
   const [formData, setFormData] = useState({
     name: "",
-    employeeId: "",
+    epfNumber: "",
     department: "",
     position: "",
-    email: "",
-    phone: "",
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -48,18 +46,6 @@ export default function EmployeeRegistration() {
     });
   };
 
-  const generateEmployeeId = () => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let id = "";
-    for (let i = 0; i < 5; i++) {
-      id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    setFormData({
-      ...formData,
-      employeeId: id,
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -69,7 +55,13 @@ export default function EmployeeRegistration() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          // For backward compatibility with the existing API
+          employeeId: formData.epfNumber,
+          email: `${formData.epfNumber}@company.com`, // Placeholder email
+          phone: "000-000-0000", // Placeholder phone
+        }),
       });
       const data = await res.json();
       setLoading(false);
@@ -181,23 +173,18 @@ export default function EmployeeRegistration() {
                     <FaIdBadge className="text-teal-600 text-xs ml-1" />
                     <input
                       type="text"
-                      id="employeeId"
+                      id="epfNumber"
                       className="w-full bg-transparent focus:outline-none text-gray-700 placeholder-gray-500 text-xs py-1"
-                      placeholder="Employee ID"
-                      value={formData.employeeId}
+                      placeholder="EPF Number"
+                      value={formData.epfNumber}
                       onChange={handleChange}
-                      maxLength={5}
                       required
                     />
-                    <button
-                      type="button"
-                      onClick={generateEmployeeId}
-                      className="ml-1 bg-teal-500 text-white px-2 py-1 rounded text-xs hover:bg-teal-600 transition-colors"
-                    >
-                      Generate
-                    </button>
                   </div>
+                </div>
 
+                {/* Right Column */}
+                <div className="space-y-3">
                   <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200 group focus-within:border-teal-400 focus-within:ring-1 focus-within:ring-teal-100 transition-all">
                     <FaBuilding className="text-teal-600 text-xs ml-1" />
                     <select
@@ -215,10 +202,7 @@ export default function EmployeeRegistration() {
                       ))}
                     </select>
                   </div>
-                </div>
 
-                {/* Right Column */}
-                <div className="space-y-3">
                   <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200 group focus-within:border-teal-400 focus-within:ring-1 focus-within:ring-teal-100 transition-all">
                     <FaUserTie className="text-teal-600 text-xs ml-1" />
                     <select
@@ -236,30 +220,6 @@ export default function EmployeeRegistration() {
                       <option value="Engineer">Engineer</option>
                       <option value="Specialist">Specialist</option>
                     </select>
-                  </div>
-
-                  <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200 group focus-within:border-teal-400 focus-within:ring-1 focus-within:ring-teal-100 transition-all">
-                    <FaUser className="text-teal-600 text-xs ml-1" />
-                    <input
-                      type="email"
-                      id="email"
-                      className="w-full bg-transparent focus:outline-none text-gray-700 placeholder-gray-500 text-xs py-1"
-                      placeholder="Email Address"
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border border-gray-200 group focus-within:border-teal-400 focus-within:ring-1 focus-within:ring-teal-100 transition-all">
-                    <FaIdBadge className="text-teal-600 text-xs ml-1" />
-                    <input
-                      type="tel"
-                      id="phone"
-                      className="w-full bg-transparent focus:outline-none text-gray-700 placeholder-gray-500 text-xs py-1"
-                      placeholder="Phone Number"
-                      onChange={handleChange}
-                      required
-                    />
                   </div>
                 </div>
               </div>
