@@ -94,7 +94,7 @@ export default function Machine_view() {
         <nav className="mt-5">
           <ul className="space-y-2">
             <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
+              className="flex items-center p-3  bg-gray-700 rounded-md cursor-pointer transition-all group"
               onClick={() => navigate("/Machine_view")}
             >
               <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
@@ -122,14 +122,7 @@ export default function Machine_view() {
                                     view Admin tool
                                   </span>
                                 </li>
-                                <li
-                                              className="flex items-center p-3 bg-gray-700 rounded-md cursor-pointer transition-all group"
-                                            >
-                                              <FaTools className="text-teal-300 text-sm mr-2" />
-                                              <span className="text-sm text-gray-200">
-                                                View Breakdown Records
-                                              </span>
-                                            </li>
+                                
           </ul>
         </nav>
       </aside>

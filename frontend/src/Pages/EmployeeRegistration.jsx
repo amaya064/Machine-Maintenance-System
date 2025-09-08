@@ -124,6 +124,7 @@ export default function EmployeeRegistration() {
                                     view Admin tool
                                   </span>
                                 </li>
+                                
           </ul>
         </nav>
       </aside>
