@@ -46,40 +46,37 @@ export default function EmployeeRegistration() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const res = await fetch("http://localhost:3000/api/employees/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          // For backward compatibility with the existing API
-          employeeId: formData.epfNumber,
-          email: `${formData.epfNumber}@company.com`, // Placeholder email
-          phone: "000-000-0000", // Placeholder phone
-        }),
-      });
-      const data = await res.json();
-      setLoading(false);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    setLoading(true);
+    
+    // Send only the fields that the backend expects
+    const res = await fetch("http://localhost:3000/api/employees/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData), // Send only name, epfNumber, department, position
+    });
+    
+    const data = await res.json();
+    setLoading(false);
 
-      if (!res.ok) {
-        setError(data.message || "Registration failed. Please try again.");
-        return;
-      }
-
-      setError(null);
-      alert("Employee registered successfully!");
-      navigate("/adminhome");
-    } catch (error) {
-      console.error("Error:", error.message);
-      setLoading(false);
-      setError("An unexpected error occurred. Please try again.");
+    if (!res.ok) {
+      setError(data.message || "Registration failed. Please try again.");
+      return;
     }
-  };
+
+    setError(null);
+    alert("Employee registered successfully!");
+    navigate("/adminhome");
+  } catch (error) {
+    console.error("Error:", error.message);
+    setLoading(false);
+    setError("An unexpected error occurred. Please try again.");
+  }
+};
 
   return (
     <div className="flex min-h-screen bg-gray-50">
