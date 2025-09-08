@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { 
-  FaCog,
+  FaClipboardCheck,
   FaCalendar,
   FaClock,
   FaTools,
@@ -183,6 +183,15 @@ const handleEdit = (breakdown) => {
                                                 view Admin tool
                                               </span>
                                             </li>
+                                            <li
+              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
+              onClick={() => navigate("/View_Post_Evaluation")}
+            >
+              <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+              <span className="text-sm group-hover:text-gray-200">
+                View PM Evaluations
+              </span>
+            </li>
 
           </ul>
         </nav>

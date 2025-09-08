@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   FaIndustry,
@@ -7,31 +7,63 @@ import {
   FaClipboardCheck,
   FaExclamationTriangle,
   FaPlusCircle,
-  FaSave,
+  FaFilePdf,
+  FaImage,
+  FaCalendarAlt,
+  FaStickyNote,
+  FaTools
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export default function PM_Post_Evaluation() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    machineName: "",
     department: "",
+    machineName: "",
     checkType: "",
+    specialNotes: "",
+    evaluationDate: new Date().toISOString().split('T')[0],
+    pdfFile: null,
+    imageFile: null
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [departments] = useState([
+    "Production", 
+    "Packaging", 
+    "Quality", 
+    "Maintenance",
+    "Warehouse"
+  ]);
+  const [machines, setMachines] = useState([]);
+  const [checkTypes] = useState([
+    "Visual Inspection", 
+    "Functional Test", 
+    "Safety Check",
+    "Lubrication Check",
+    "Calibration Check"
+  ]);
 
-  // Sample dropdown data (replace with API fetch later)
-  const departments = ["Production", "Packaging", "Quality"];
-  const machines = {
-    Production: ["Lathe Machine", "Milling Machine", "Drill Press"],
-    Packaging: ["Conveyor Belt", "Sealing Machine"],
-    Quality: ["Testing Rig", "X-Ray Scanner"],
+  // Fetch machines from backend
+  useEffect(() => {
+    fetchMachines();
+  }, []);
+
+  const fetchMachines = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/machines");
+      setMachines(response.data.data);
+    } catch (error) {
+      console.error("Error fetching machines:", error);
+    }
   };
-  const checkTypes = ["Visual Inspection", "Functional Test", "Safety Check"];
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "pdfFile" || e.target.name === "imageFile") {
+      setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
     setError("");
   };
 
@@ -40,18 +72,26 @@ export default function PM_Post_Evaluation() {
     setLoading(true);
     setError("");
 
+    // Create FormData for file upload
+    const submitData = new FormData();
+    Object.keys(formData).forEach(key => {
+      if (formData[key] !== null) {
+        submitData.append(key, formData[key]);
+      }
+    });
+
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/pm-evaluation",
-        formData,
+        "http://localhost:3000/api/pm-evaluations",
+        submitData,
         {
-          headers: { "Content-Type": "application/json" },
-          timeout: 10000,
+          headers: { "Content-Type": "multipart/form-data" },
+          timeout: 30000, // Longer timeout for file uploads
         }
       );
 
       alert(response.data.message || "PM Evaluation saved successfully");
-      navigate("/View_PM_Evaluations"); // redirect to view page
+      navigate("/View_PM_Evaluations");
     } catch (error) {
       console.error("Submission error:", error);
       if (error.response) {
@@ -76,8 +116,35 @@ export default function PM_Post_Evaluation() {
         <nav className="mt-5">
           <ul className="space-y-2">
             <li
+                          className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
+                          onClick={() => navigate("/Machine_view")}
+                        >
+                          <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+                          <span className="text-sm group-hover:text-gray-200">
+                            View Machines
+                          </span>
+                        </li>
+                        <li
               className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/View_PM_Evaluations")}
+              onClick={() => navigate("/View_Maintenance_Schedule")}
+            >
+              <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+              <span className="text-sm group-hover:text-gray-200">
+                View Maintenance Schedule
+              </span>
+            </li>
+            <li
+              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
+              onClick={() => navigate("/view_Admin_tool")}
+            >
+              <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+              <span className="text-sm group-hover:text-gray-200">
+                view Admin tool
+              </span>
+            </li>
+            <li
+              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
+              onClick={() => navigate("/View_Post_Evaluation")}
             >
               <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
               <span className="text-sm group-hover:text-gray-200">
@@ -134,7 +201,7 @@ export default function PM_Post_Evaluation() {
                   </select>
                 </div>
 
-                {/* Machine Dropdown (depends on department) */}
+                {/* Machine Dropdown */}
                 <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
                   <FaCog className="text-teal-600 text-xs" />
                   <select
@@ -143,15 +210,13 @@ export default function PM_Post_Evaluation() {
                     onChange={handleChange}
                     className="w-full bg-transparent focus:outline-none text-gray-700 text-sm"
                     required
-                    disabled={!formData.department}
                   >
                     <option value="">Select Machine</option>
-                    {formData.department &&
-                      machines[formData.department]?.map((m) => (
-                        <option key={m} value={m}>
-                          {m}
-                        </option>
-                      ))}
+                    {machines.map((machine) => (
+                      <option key={machine._id} value={machine.machineName}>
+                        {machine.machineName}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -172,6 +237,56 @@ export default function PM_Post_Evaluation() {
                       </option>
                     ))}
                   </select>
+                </div>
+
+                {/* Special Notes */}
+                <div className="flex items-start gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                  <FaStickyNote className="text-teal-600 text-xs mt-1" />
+                  <textarea
+                    name="specialNotes"
+                    value={formData.specialNotes}
+                    onChange={handleChange}
+                    placeholder="Enter special notes or observations"
+                    className="w-full bg-transparent focus:outline-none text-gray-700 text-sm resize-none"
+                    rows="3"
+                  />
+                </div>
+
+                {/* Date Input */}
+                <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                  <FaCalendarAlt className="text-teal-600 text-xs" />
+                  <input
+                    type="date"
+                    name="evaluationDate"
+                    value={formData.evaluationDate}
+                    onChange={handleChange}
+                    className="w-full bg-transparent focus:outline-none text-gray-700 text-sm"
+                    required
+                  />
+                </div>
+
+                {/* PDF Upload */}
+                <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                  <FaFilePdf className="text-teal-600 text-xs" />
+                  <input
+                    type="file"
+                    name="pdfFile"
+                    onChange={handleChange}
+                    accept=".pdf"
+                    className="w-full bg-transparent focus:outline-none text-gray-700 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+                  />
+                </div>
+
+                {/* Image Upload */}
+                <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                  <FaImage className="text-teal-600 text-xs" />
+                  <input
+                    type="file"
+                    name="imageFile"
+                    onChange={handleChange}
+                    accept="image/*"
+                    className="w-full bg-transparent focus:outline-none text-gray-700 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+                  />
                 </div>
               </div>
 
