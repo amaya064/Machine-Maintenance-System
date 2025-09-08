@@ -1,5 +1,5 @@
 // controller/employee.controller.js
-import Employee from '../model/Employee.model.js'; // Fix this import
+import Employee from '../model/employee.model.js';
 
 export const registerEmployee = async (req, res, next) => {
   console.log("Employee registration request received with data:", req.body);
@@ -14,8 +14,14 @@ export const registerEmployee = async (req, res, next) => {
   }
 
   try {
-    // Check if EPF number already exists
-    const existingEmployee = await Employee.findOne({ epfNumber });
+    // Check if EPF number already exists in either epfNumber or employeeId field
+    const existingEmployee = await Employee.findOne({ 
+      $or: [
+        { epfNumber: epfNumber },
+        { employeeId: epfNumber } // Check old field name for backward compatibility
+      ]
+    });
+    
     if (existingEmployee) {
       return res.status(400).json({ 
         success: false,
@@ -44,6 +50,7 @@ export const registerEmployee = async (req, res, next) => {
     
     // Handle duplicate key error
     if (error.code === 11000) {
+      // Check if the error is due to epfNumber or employeeId field
       return res.status(400).json({
         success: false,
         message: 'EPF number already exists in the system.'
