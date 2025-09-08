@@ -14,6 +14,7 @@ import {
   FaIndustry,
   FaPlusCircle,
   FaSave,
+  FaClipboardCheck
 } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -173,6 +174,15 @@ export default function New_machine_registration() {
                                     view Admin tool
                                   </span>
                                 </li>
+                                <li
+              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
+              onClick={() => navigate("/View_Post_Evaluation")}
+            >
+              <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+              <span className="text-sm group-hover:text-gray-200">
+                View PM Evaluations
+              </span>
+            </li>
           </ul>
         </nav>
       </aside>

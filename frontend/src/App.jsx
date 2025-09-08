@@ -17,6 +17,7 @@ import Pm_admin_tool from './Pages/pm_admin_tool'
 import PM_Post_Evaluation from './Pages/PM_Post_Evaluation'
 
 import View_Admin_tool from './Pages/view_Admin_tool'
+import View_Post_Evaluation from './Pages/View_Post_Evaluation'
 
 
 export default function App() {
@@ -40,6 +41,7 @@ export default function App() {
       <Route path="/Pm_admin_tool" element={<Pm_admin_tool />} />
 
       <Route path="/PM_Post_Evaluation" element={<PM_Post_Evaluation />} />
+      <Route path="/View_Post_Evaluation" element={<View_Post_Evaluation />} />
       
 
       <Route path="/View_Admin_tool" element={<View_Admin_tool />} />

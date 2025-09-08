@@ -9,6 +9,7 @@ import productRouter from './route/product.route.js';
 import paymentRouter from './route/payment.route.js';
 import orderRouter from './route/order.route.js';
 import breakdownRoutes from './route/breakdown.route.js';
+import pmEvaluationRouter from './route/pmEvaluation.route.js';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+app.use('/pdf', express.static('pdf'));
 
 
 // Routes path
@@ -37,6 +39,7 @@ app.use('/api/payment', paymentRouter);
 
 app.use('/api/orders', orderRouter);
 app.use('/api/breakdowns', breakdownRoutes);
+app.use('/api/pm-evaluations', pmEvaluationRouter); 
 
 
 
