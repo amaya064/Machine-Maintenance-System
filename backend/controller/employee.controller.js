@@ -3,13 +3,13 @@ import Employee from '../model/employee.model.js';
 
 export const registerEmployee = async (req, res, next) => {
   console.log("Employee registration request received with data:", req.body);
-  const { name, epfNumber, department, position } = req.body;
+  const { name, epfNumber, position } = req.body;
 
-  // Validation
-  if (!name || !epfNumber || !department || !position) {
+  // Validation - removed department requirement
+  if (!name || !epfNumber || !position) {
     return res.status(400).json({ 
       success: false,
-      message: 'All fields are required: name, EPF number, department, and position.' 
+      message: 'All fields are required: name, EPF number, and position.' 
     });
   }
 
@@ -29,11 +29,10 @@ export const registerEmployee = async (req, res, next) => {
       });
     }
 
-    // Create new employee
+    // Create new employee - removed department field
     const newEmployee = new Employee({
       name,
       epfNumber,
-      department,
       position
     });
 
