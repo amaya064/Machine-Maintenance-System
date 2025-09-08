@@ -147,6 +147,13 @@ export default function View_Post_Evaluation() {
                 View Admin tool
               </span>
             </li>
+            <li
+              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
+              onClick={() => navigate("/View_Leave")}
+            >
+              <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+              <span className="text-sm group-hover:text-gray-200">View PM Evaluations</span>
+            </li>
           </ul>
         </nav>
       </aside>
