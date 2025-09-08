@@ -1,5 +1,6 @@
 // controller/employee.controller.js
 import Employee from '../model/employee.model.js';
+import Leave from '../model/leave.model.js';
 
 export const registerEmployee = async (req, res, next) => {
   console.log("Employee registration request received with data:", req.body);
@@ -70,6 +71,101 @@ export const registerEmployee = async (req, res, next) => {
     res.status(500).json({
       success: false,
       message: 'Internal server error. Please try again later.'
+    });
+  }
+};
+
+
+
+
+export const getEmployees = async (req, res, next) => {
+  try {
+    const employees = await Employee.find().select('epfNumber name position').sort({ name: 1 });
+    res.status(200).json({
+      success: true,
+      data: employees
+    });
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching employees'
+    });
+  }
+};
+
+
+
+
+export const createLeave = async (req, res, next) => {
+  const { epfNumber, leaveType, startDate, endDate, reason } = req.body;
+
+  // Validation
+  if (!epfNumber || !leaveType || !startDate || !endDate || !reason) {
+    return res.status(400).json({
+      success: false,
+      message: 'All fields are required'
+    });
+  }
+
+  try {
+    // Get employee name from EPF number
+    const employee = await Employee.findOne({ epfNumber });
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: 'Employee not found'
+      });
+    }
+
+    // Create new leave record
+    const newLeave = new Leave({
+      epfNumber,
+      name: employee.name,
+      leaveType,
+      startDate,
+      endDate,
+      reason
+    });
+
+    await newLeave.save();
+    
+    res.status(201).json({
+      success: true,
+      message: 'Leave application submitted successfully',
+      data: newLeave
+    });
+  } catch (error) {
+    console.error("Leave creation error:", error);
+    
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map(val => val.message);
+      return res.status(400).json({
+        success: false,
+        message: 'Validation error',
+        errors: errors
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+export const getLeaves = async (req, res, next) => {
+  try {
+    const leaves = await Leave.find().sort({ createdAt: -1 });
+    res.status(200).json({
+      success: true,
+      data: leaves
+    });
+  } catch (error) {
+    console.error("Error fetching leaves:", error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching leave records'
     });
   }
 };
