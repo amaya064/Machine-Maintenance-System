@@ -53,7 +53,7 @@ export default function EmployeeRegistration() {
 
       setError(null);
       alert("Employee registered successfully!");
-      navigate("/adminhome");
+      navigate("/EmployeeRegistration");
     } catch (error) {
       console.error("Error:", error.message);
       setLoading(false);
