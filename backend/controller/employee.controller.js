@@ -169,3 +169,63 @@ export const getLeaves = async (req, res, next) => {
     });
   }
 };
+
+
+
+export const updateLeaveStatus = async (req, res, next) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const leave = await Leave.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true, runValidators: true }
+    );
+
+    if (!leave) {
+      return res.status(404).json({
+        success: false,
+        message: 'Leave record not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Leave status updated successfully',
+      data: leave
+    });
+  } catch (error) {
+    console.error("Error updating leave status:", error);
+    res.status(500).json({
+      success: false,
+      message: 'Error updating leave status'
+    });
+  }
+};
+
+export const deleteLeave = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const leave = await Leave.findByIdAndDelete(id);
+
+    if (!leave) {
+      return res.status(404).json({
+        success: false,
+        message: 'Leave record not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Leave record deleted successfully'
+    });
+  } catch (error) {
+    console.error("Error deleting leave:", error);
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting leave record'
+    });
+  }
+};

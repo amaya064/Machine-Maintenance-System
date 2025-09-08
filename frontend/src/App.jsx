@@ -19,6 +19,7 @@ import PM_Post_Evaluation from './Pages/PM_Post_Evaluation'
 import View_Admin_tool from './Pages/view_Admin_tool'
 import View_Post_Evaluation from './Pages/View_Post_Evaluation'
 import View_PM_Team_Leave from './Pages/View_PM_Team_Leave'
+import View_Leave from './Pages/View_Leave'
 
 
 export default function App() {
@@ -44,6 +45,7 @@ export default function App() {
       <Route path="/PM_Post_Evaluation" element={<PM_Post_Evaluation />} />
       <Route path="/View_Post_Evaluation" element={<View_Post_Evaluation />} />
       <Route path="/View_PM_Team_Leave" element={<View_PM_Team_Leave />} />
+      <Route path="/View_Leave" element={<View_Leave />} />
       
 
       <Route path="/View_Admin_tool" element={<View_Admin_tool />} />
