@@ -232,8 +232,6 @@ const handleSubmit = async (e) => {
                   <option value="Annual">Annual Leave</option>
                   <option value="Sick">Sick Leave</option>
                   <option value="Casual">Casual Leave</option>
-                  <option value="Maternity">Maternity Leave</option>
-                  <option value="Paternity">Paternity Leave</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
