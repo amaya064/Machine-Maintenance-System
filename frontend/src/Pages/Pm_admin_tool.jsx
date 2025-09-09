@@ -215,7 +215,7 @@ useEffect(() => {
               <FaTools className="text-white text-lg" />
             </div>
             <h1 className="text-xl font-bold text-gray-800 mb-1">
-    {editMode ? 'Edit Breakdown Record' : 'PM Admin Tool - Breakdown Management'}
+    {editMode ? 'Edit Breakdown Record' : 'PM Admin Tool'}
   </h1>
             <p className="text-gray-600 text-xs">
               Record and manage machine breakdown information
