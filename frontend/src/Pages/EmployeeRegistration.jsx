@@ -185,7 +185,6 @@ export default function EmployeeRegistration() {
                     <option value="Technician">Technician</option>
                     <option value="Supervisor">Supervisor</option>
                     <option value="Engineer">Engineer</option>
-                    <option value="Specialist">Specialist</option>
                   </select>
                 </div>
               </div>
