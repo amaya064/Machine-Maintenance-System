@@ -29,19 +29,29 @@ export default function PM_Post_Evaluation() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [departments] = useState([
-    "Production", 
-    "Packaging", 
-    "Quality", 
-    "Maintenance",
-    "Warehouse"
+    "Finishing", 
+    "Dyeing", 
+    "Warping", 
+    "Inspection",
+    "Weft Knitting",
+    "Warp Knitting",
+    "Printing",
+    "Utility"
   ]);
   const [machines, setMachines] = useState([]);
   const [checkTypes] = useState([
-    "Visual Inspection", 
-    "Functional Test", 
-    "Safety Check",
-    "Lubrication Check",
-    "Calibration Check"
+    "A-Check", 
+    "B-Check", 
+    "C-Check",
+    "D-Check",
+    "E-Check",
+    "F-Check",
+    "G-Check",
+    "H-Check",
+    "I-Check",
+    "J-Check",
+    "K-Check",
+    "Annual MTC"
   ]);
 
   // Fetch machines from backend
