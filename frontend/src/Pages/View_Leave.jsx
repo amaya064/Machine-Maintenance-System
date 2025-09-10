@@ -261,8 +261,6 @@ export default function View_Leave() {
                     <option value="Annual">Annual</option>
                     <option value="Sick">Sick</option>
                     <option value="Casual">Casual</option>
-                    <option value="Maternity">Maternity</option>
-                    <option value="Paternity">Paternity</option>
                     <option value="Other">Other</option>
                   </select>
                 </div>
