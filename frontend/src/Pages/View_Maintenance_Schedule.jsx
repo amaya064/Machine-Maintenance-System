@@ -16,8 +16,12 @@ import {
   FaEye,
   FaEdit,
   FaTrash,
-  FaArrowLeft
+  FaArrowLeft,
+  FaFilePdf,
+  FaDownload
 } from 'react-icons/fa';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 export default function View_Maintenance_Schedule() {
   const navigate = useNavigate();
@@ -76,6 +80,130 @@ export default function View_Maintenance_Schedule() {
     });
   };
 
+  // Function to download PDF for a single record
+  const downloadSinglePDF = (schedule) => {
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(18);
+    doc.text('Maintenance Schedule Details', 14, 22);
+    
+    // Add details
+    doc.setFontSize(12);
+    let yPosition = 40;
+    
+    const details = [
+      { label: 'Machine Name', value: schedule.machineName },
+      { label: 'Department', value: schedule.department },
+      { label: 'Month', value: schedule.month },
+      { label: 'PM Team', value: schedule.pmTeam },
+      { label: 'Check Type', value: schedule.checkType },
+      { label: 'Start Date', value: formatDate(schedule.startDate) },
+      { label: 'End Date', value: formatDate(schedule.endDate) },
+      { label: 'Next Schedule Date', value: formatDate(schedule.nextScheduleDate) },
+      { label: 'Frequency', value: schedule.frequency },
+      { label: 'Created At', value: formatDate(schedule.createdAt || new Date()) }
+    ];
+    
+    details.forEach(detail => {
+      doc.setFont(undefined, 'bold');
+      doc.text(`${detail.label}:`, 14, yPosition);
+      doc.setFont(undefined, 'normal');
+      doc.text(detail.value, 60, yPosition);
+      yPosition += 10;
+    });
+    
+    // Save the PDF
+    doc.save(`Maintenance_Schedule_${schedule.machineName}_${schedule.month}.pdf`);
+  };
+
+  
+// Function to download PDF for all records
+const downloadAllPDF = () => {
+  try {
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(16);
+    doc.text('ALL MAINTENANCE SCHEDULES', 105, 15, { align: 'center' });
+    doc.setFontSize(10);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 22, { align: 'center' });
+    
+    if (schedules.length === 0) {
+      doc.setFontSize(12);
+      doc.text('No maintenance schedules found', 105, 40, { align: 'center' });
+      doc.save('All_Maintenance_Schedules.pdf');
+      return;
+    }
+    
+    // Create a simple table without autoTable
+    let yPosition = 40;
+    const pageHeight = doc.internal.pageSize.height;
+    const margin = 15;
+    const rowHeight = 10;
+    
+    // Table headers
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'bold');
+    doc.text('Machine', margin, yPosition);
+    doc.text('Department', margin + 40, yPosition);
+    doc.text('Month', margin + 80, yPosition);
+    doc.text('PM Team', margin + 100, yPosition);
+    doc.text('Check Type', margin + 130, yPosition);
+    doc.text('Start Date', margin + 160, yPosition);
+    yPosition += rowHeight;
+    
+    // Draw line under headers
+    doc.line(margin, yPosition - 5, 200, yPosition - 5);
+    
+    // Table rows
+    doc.setFont(undefined, 'normal');
+    schedules.forEach((schedule, index) => {
+      // Check if we need a new page
+      if (yPosition > pageHeight - margin) {
+        doc.addPage();
+        yPosition = margin;
+      }
+      
+      doc.text(schedule.machineName || 'N/A', margin, yPosition);
+      doc.text(schedule.department || 'N/A', margin + 40, yPosition);
+      doc.text(schedule.month || 'N/A', margin + 80, yPosition);
+      doc.text(schedule.pmTeam || 'N/A', margin + 100, yPosition);
+      doc.text(schedule.checkType || 'N/A', margin + 130, yPosition);
+      doc.text(formatDate(schedule.startDate) || 'N/A', margin + 160, yPosition);
+      
+      yPosition += rowHeight;
+      
+      // Add additional info on next line
+      if (yPosition > pageHeight - margin) {
+        doc.addPage();
+        yPosition = margin;
+      }
+      
+      doc.text(`End: ${formatDate(schedule.endDate) || 'N/A'}`, margin, yPosition);
+      doc.text(`Next: ${formatDate(schedule.nextScheduleDate) || 'N/A'}`, margin + 40, yPosition);
+      doc.text(`Freq: ${schedule.frequency || 'N/A'}`, margin + 80, yPosition);
+      
+      yPosition += rowHeight + 5;
+      
+      // Add separator line
+      if (index < schedules.length - 1) {
+        doc.line(margin, yPosition - 2, 200, yPosition - 2);
+        yPosition += 5;
+      }
+    });
+    
+    // Save the PDF
+    doc.save('All_Maintenance_Schedules.pdf');
+    
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    alert('Error generating PDF. Please check the console for details.');
+  }
+};
+
+
+
   if (loading) {
     return (
       <div className="flex min-h-screen bg-gray-50">
@@ -118,16 +246,16 @@ export default function View_Maintenance_Schedule() {
               </span>
             </li>
 
-             <li
-                                  className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-                                  onClick={() => navigate("/view_Admin_tool")}
-                                >
-                                  <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-                                  <span className="text-sm group-hover:text-gray-200">
-                                    view Admin tool
-                                  </span>
-                                </li>
-                                <li
+            <li
+              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
+              onClick={() => navigate("/view_Admin_tool")}
+            >
+              <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+              <span className="text-sm group-hover:text-gray-200">
+                view Admin tool
+              </span>
+            </li>
+            <li
               className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
               onClick={() => navigate("/View_Post_Evaluation")}
             >
@@ -143,7 +271,6 @@ export default function View_Maintenance_Schedule() {
               <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
               <span className="text-sm group-hover:text-gray-200">View PM Evaluations</span>
             </li>
-                                
           </ul>
         </nav>
       </aside>
@@ -172,13 +299,25 @@ export default function View_Maintenance_Schedule() {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => navigate("/Machine_maintenance_schedule")}
-              className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-2 px-4 rounded-lg hover:from-teal-600 hover:to-cyan-600 transition-all flex items-center text-xs"
-            >
-              <FaCalendar className="mr-2" />
-              Create New
-            </button>
+            <div className="flex space-x-2">
+              {/* All PDF Button */}
+              {schedules.length > 0 && (
+                <button
+                  onClick={downloadAllPDF}
+                  className="bg-gradient-to-r from-red-500 to-red-600 text-white py-2 px-4 rounded-lg hover:from-red-600 hover:to-red-700 transition-all flex items-center text-xs"
+                >
+                  <FaFilePdf className="mr-2" />
+                  All PDF
+                </button>
+              )}
+              <button
+                onClick={() => navigate("/Machine_maintenance_schedule")}
+                className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white py-2 px-4 rounded-lg hover:from-teal-600 hover:to-cyan-600 transition-all flex items-center text-xs"
+              >
+                <FaCalendar className="mr-2" />
+                Create New
+              </button>
+            </div>
           </div>
 
           {/* Error Message */}
@@ -275,6 +414,13 @@ export default function View_Maintenance_Schedule() {
                               title="Edit"
                             >
                               <FaEdit />
+                            </button>
+                            <button
+                              onClick={() => downloadSinglePDF(schedule)}
+                              className="text-red-600 hover:text-red-900 p-1"
+                              title="Download PDF"
+                            >
+                              <FaFilePdf />
                             </button>
                             <button
                               onClick={() => handleDelete(schedule._id)}
