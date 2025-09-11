@@ -174,7 +174,7 @@ const handleSubmit = async (e) => {
             <div className="inline-flex items-center justify-center p-3 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl mb-3">
               <FaClipboardList className="text-white text-lg" />
             </div>
-            <h1 className="text-xl font-bold text-gray-800 mb-1">PM Team Leave Management</h1>
+            <h1 className="text-xl font-bold text-gray-800 mb-1">PM Team Leave</h1>
             <p className="text-gray-600 text-xs">Manage preventive maintenance team leave applications</p>
           </div>
 
