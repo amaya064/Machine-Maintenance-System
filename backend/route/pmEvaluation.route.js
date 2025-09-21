@@ -3,7 +3,9 @@ import {
   createPMEvaluation,
   getPMEvaluations,
   getPMEvaluationById,
-  getDepartments
+  getDepartments,
+  deletePMEvaluation,
+  updatePMEvaluation
 } from "../controller/pmEvaluation.controller.js";
 import multer from "multer";
 import path from "path";
@@ -42,5 +44,7 @@ router.post("/", upload.fields([
 router.get("/", getPMEvaluations);
 router.get("/departments", getDepartments);
 router.get("/:id", getPMEvaluationById);
+router.delete("/:id", deletePMEvaluation);
+router.put("/:id", upload.fields([{ name: "pdfFile" }, { name: "imageFile" }]), updatePMEvaluation);
 
 export default router;
