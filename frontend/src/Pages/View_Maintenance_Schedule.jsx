@@ -269,7 +269,7 @@ const downloadAllPDF = () => {
               onClick={() => navigate("/View_Leave")}
             >
               <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View PM Evaluations</span>
+              <span className="text-sm group-hover:text-gray-200">View Leave Records</span>
             </li>
           </ul>
         </nav>

@@ -3,7 +3,7 @@ import PMEvaluation from "../model/pmEvaluation.model.js";
 
 export const createPMEvaluation = async (req, res, next) => {
   try {
-    const { department, machineName, checkType, specialNotes, evaluationDate } = req.body;
+    const { department, machineName, checkType, specialNotes, evaluationDate, nextScheduleDate, maintenanceType } = req.body;
     
     // Check if files were uploaded
     const pdfPath = req.files && req.files.pdfFile ? req.files.pdfFile[0].path : "";
@@ -15,6 +15,8 @@ export const createPMEvaluation = async (req, res, next) => {
       checkType,
       specialNotes,
       evaluationDate,
+      nextScheduleDate,
+      maintenanceType, // New field
       pdfPath,
       imagePath
     });
@@ -67,6 +69,70 @@ export const getDepartments = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: departments
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const deletePMEvaluation = async (req, res, next) => {
+  try {
+    const evaluation = await PMEvaluation.findByIdAndDelete(req.params.id);
+    if (!evaluation) {
+      return res.status(404).json({
+        success: false,
+        message: "PM Evaluation not found"
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "PM Evaluation deleted successfully"
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updatePMEvaluation = async (req, res, next) => {
+  try {
+    const { department, machineName, checkType, specialNotes, evaluationDate, nextScheduleDate, maintenanceType } = req.body;
+    
+    // Check if files were uploaded
+    const pdfPath = req.files && req.files.pdfFile ? req.files.pdfFile[0].path : undefined;
+    const imagePath = req.files && req.files.imageFile ? req.files.imageFile[0].path : undefined;
+
+    const updateData = {
+      department,
+      machineName,
+      checkType,
+      specialNotes,
+      evaluationDate,
+      nextScheduleDate,
+      maintenanceType
+    };
+
+    // Only update file paths if new files were uploaded
+    if (pdfPath) updateData.pdfPath = pdfPath;
+    if (imagePath) updateData.imagePath = imagePath;
+
+    const updatedEvaluation = await PMEvaluation.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedEvaluation) {
+      return res.status(404).json({
+        success: false,
+        message: "PM Evaluation not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "PM Evaluation updated successfully",
+      data: updatedEvaluation
     });
   } catch (error) {
     next(error);

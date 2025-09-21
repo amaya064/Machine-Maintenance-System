@@ -15,7 +15,9 @@ import {
   FaSearch,
   FaFilter,
   FaTrash,
-  FaEdit
+  FaEdit,
+  FaSave,
+  FaTimes
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -30,6 +32,15 @@ export default function View_Post_Evaluation() {
   const [filterCheckType, setFilterCheckType] = useState("");
   const [selectedEvaluation, setSelectedEvaluation] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editFormData, setEditFormData] = useState({});
+  const [editFiles, setEditFiles] = useState({ pdfFile: null, imageFile: null });
+  const [saveLoading, setSaveLoading] = useState(false);
+
+  // Departments and check types for dropdowns
+  const departments = ["Finishing", "Dyeing", "Warping", "Inspection", "Weft Knitting", "Warp Knitting", "Printing", "Utility"];
+  const checkTypes = ["A-Check", "B-Check", "C-Check", "D-Check", "E-Check", "F-Check", "G-Check", "H-Check", "I-Check", "J-Check", "K-Check", "Annual MTC"];
+  const maintenanceTypes = ["shutdown", "specialMaintenance"];
 
   // Fetch evaluations from backend
   useEffect(() => {
@@ -83,7 +94,90 @@ export default function View_Post_Evaluation() {
 
   const handleViewDetails = (evaluation) => {
     setSelectedEvaluation(evaluation);
+    setEditFormData(evaluation);
+    setIsEditing(false);
     setShowModal(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this evaluation?")) {
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:3000/api/pm-evaluations/${id}`);
+      alert("Evaluation deleted successfully");
+      fetchEvaluations(); // Refresh the list
+    } catch (error) {
+      console.error("Error deleting evaluation:", error);
+      alert("Failed to delete evaluation");
+    }
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditFormData(selectedEvaluation);
+    setEditFiles({ pdfFile: null, imageFile: null });
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setEditFiles(prev => ({
+      ...prev,
+      [name]: files[0]
+    }));
+  };
+
+  const handleSaveEdit = async () => {
+    setSaveLoading(true);
+    try {
+      const formData = new FormData();
+      
+      // Append all form data
+      Object.keys(editFormData).forEach(key => {
+        if (key !== 'pdfPath' && key !== 'imagePath' && key !== '_id' && key !== '__v' && key !== 'createdAt') {
+          formData.append(key, editFormData[key]);
+        }
+      });
+
+      // Append files if they exist
+      if (editFiles.pdfFile) {
+        formData.append('pdfFile', editFiles.pdfFile);
+      }
+      if (editFiles.imageFile) {
+        formData.append('imageFile', editFiles.imageFile);
+      }
+
+      const response = await axios.put(
+        `http://localhost:3000/api/pm-evaluations/${selectedEvaluation._id}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      alert("Evaluation updated successfully");
+      setIsEditing(false);
+      setShowModal(false);
+      fetchEvaluations(); // Refresh the list
+    } catch (error) {
+      console.error("Error updating evaluation:", error);
+      alert("Failed to update evaluation");
+    } finally {
+      setSaveLoading(false);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -91,8 +185,9 @@ export default function View_Post_Evaluation() {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  const departments = ["Production", "Packaging", "Quality", "Maintenance", "Warehouse"];
-  const checkTypes = ["Visual Inspection", "Functional Test", "Safety Check", "Lubrication Check", "Calibration Check"];
+  const formatDateForInput = (dateString) => {
+    return new Date(dateString).toISOString().split('T')[0];
+  };
 
   if (loading) {
     return (
@@ -117,7 +212,7 @@ export default function View_Post_Evaluation() {
             >
               <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
               <span className="text-sm group-hover:text-gray-200">
-                Create PM Evaluation
+                Create Evaluation
               </span>
             </li>
             <li
@@ -139,12 +234,11 @@ export default function View_Post_Evaluation() {
               </span>
             </li>
             <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/view_Admin_tool")}
+              className="flex items-center p-3 bg-gray-700 rounded-md cursor-pointer transition-all group"
             >
-              <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+              <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
               <span className="text-sm group-hover:text-gray-200">
-                View Admin tool
+                View PM Evaluations
               </span>
             </li>
             <li
@@ -152,7 +246,7 @@ export default function View_Post_Evaluation() {
               onClick={() => navigate("/View_Leave")}
             >
               <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View PM Evaluations</span>
+              <span className="text-sm group-hover:text-gray-200">View Leave Records</span>
             </li>
           </ul>
         </nav>
@@ -269,6 +363,12 @@ export default function View_Post_Evaluation() {
                         Date
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Next Schedule Date
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Maintenance Type
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Attachments
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -290,6 +390,14 @@ export default function View_Post_Evaluation() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-500">{formatDate(evaluation.evaluationDate)}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-500">{formatDate(evaluation.nextScheduleDate)}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-500">
+                            {evaluation.maintenanceType === "shutdown" ? "Shutdown" : "Special Maintenance"}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex space-x-2">
@@ -319,15 +427,29 @@ export default function View_Post_Evaluation() {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button
-                            onClick={() => handleViewDetails(evaluation)}
-                            className="text-teal-600 hover:text-teal-900 mr-3"
-                          >
-                            <FaEye className="text-sm" />
-                          </button>
-                          <button className="text-red-600 hover:text-red-900">
-                            <FaTrash className="text-sm" />
-                          </button>
+                          <div className="flex space-x-3">
+                            <button
+                              onClick={() => handleViewDetails(evaluation)}
+                              className="text-teal-600 hover:text-teal-900"
+                              title="View Details"
+                            >
+                              <FaEye className="text-sm" />
+                            </button>
+                            <button
+                              onClick={() => handleViewDetails(evaluation)}
+                              className="text-blue-600 hover:text-blue-900"
+                              title="Edit"
+                            >
+                              <FaEdit className="text-sm" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(evaluation._id)}
+                              className="text-red-600 hover:text-red-900"
+                              title="Delete"
+                            >
+                              <FaTrash className="text-sm" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -337,15 +459,20 @@ export default function View_Post_Evaluation() {
             )}
           </div>
 
-          {/* Evaluation Detail Modal */}
+          {/* Evaluation Detail Modal with Edit Functionality */}
           {showModal && selectedEvaluation && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
               <div className="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-screen overflow-y-auto">
                 <div className="p-6">
                   <div className="flex justify-between items-center mb-5">
-                    <h3 className="text-lg font-semibold text-gray-800">Evaluation Details</h3>
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      {isEditing ? "Edit Evaluation" : "Evaluation Details"}
+                    </h3>
                     <button
-                      onClick={() => setShowModal(false)}
+                      onClick={() => {
+                        setShowModal(false);
+                        setIsEditing(false);
+                      }}
                       className="text-gray-400 hover:text-gray-600"
                     >
                       &times;
@@ -353,49 +480,197 @@ export default function View_Post_Evaluation() {
                   </div>
 
                   <div className="space-y-4">
+                    {/* Department */}
                     <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
                       <FaBuilding className="text-teal-600 text-xs" />
-                      <div>
-                        <p className="text-xs text-gray-500">Department</p>
-                        <p className="text-sm text-gray-800">{selectedEvaluation.department}</p>
-                      </div>
+                      {isEditing ? (
+                        <select
+                          name="department"
+                          value={editFormData.department || ""}
+                          onChange={handleEditChange}
+                          className="w-full bg-transparent focus:outline-none text-gray-700 text-sm"
+                          required
+                        >
+                          <option value="">Select Department</option>
+                          {departments.map((dept) => (
+                            <option key={dept} value={dept}>
+                              {dept}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <div>
+                          <p className="text-xs text-gray-500">Department</p>
+                          <p className="text-sm text-gray-800">{selectedEvaluation.department}</p>
+                        </div>
+                      )}
                     </div>
 
+                    {/* Machine Name */}
                     <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
                       <FaCog className="text-teal-600 text-xs" />
-                      <div>
-                        <p className="text-xs text-gray-500">Machine</p>
-                        <p className="text-sm text-gray-800">{selectedEvaluation.machineName}</p>
-                      </div>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          name="machineName"
+                          value={editFormData.machineName || ""}
+                          onChange={handleEditChange}
+                          className="w-full bg-transparent focus:outline-none text-gray-700 text-sm"
+                          required
+                        />
+                      ) : (
+                        <div>
+                          <p className="text-xs text-gray-500">Machine</p>
+                          <p className="text-sm text-gray-800">{selectedEvaluation.machineName}</p>
+                        </div>
+                      )}
                     </div>
 
+                    {/* Check Type */}
                     <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
                       <FaClipboardCheck className="text-teal-600 text-xs" />
-                      <div>
-                        <p className="text-xs text-gray-500">Check Type</p>
-                        <p className="text-sm text-gray-800">{selectedEvaluation.checkType}</p>
-                      </div>
+                      {isEditing ? (
+                        <select
+                          name="checkType"
+                          value={editFormData.checkType || ""}
+                          onChange={handleEditChange}
+                          className="w-full bg-transparent focus:outline-none text-gray-700 text-sm"
+                          required
+                        >
+                          <option value="">Select Check Type</option>
+                          {checkTypes.map((type) => (
+                            <option key={type} value={type}>
+                              {type}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <div>
+                          <p className="text-xs text-gray-500">Check Type</p>
+                          <p className="text-sm text-gray-800">{selectedEvaluation.checkType}</p>
+                        </div>
+                      )}
                     </div>
 
+                    {/* Special Notes */}
                     <div className="flex items-start gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
                       <FaStickyNote className="text-teal-600 text-xs mt-1" />
-                      <div>
-                        <p className="text-xs text-gray-500">Special Notes</p>
-                        <p className="text-sm text-gray-800 whitespace-pre-wrap">
-                          {selectedEvaluation.specialNotes || "No notes provided"}
-                        </p>
-                      </div>
+                      {isEditing ? (
+                        <textarea
+                          name="specialNotes"
+                          value={editFormData.specialNotes || ""}
+                          onChange={handleEditChange}
+                          placeholder="Enter special notes or observations"
+                          className="w-full bg-transparent focus:outline-none text-gray-700 text-sm resize-none"
+                          rows="3"
+                        />
+                      ) : (
+                        <div>
+                          <p className="text-xs text-gray-500">Special Notes</p>
+                          <p className="text-sm text-gray-800 whitespace-pre-wrap">
+                            {selectedEvaluation.specialNotes || "No notes provided"}
+                          </p>
+                        </div>
+                      )}
                     </div>
 
+                    {/* Evaluation Date */}
                     <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
                       <FaCalendarAlt className="text-teal-600 text-xs" />
-                      <div>
-                        <p className="text-xs text-gray-500">Evaluation Date</p>
-                        <p className="text-sm text-gray-800">{formatDate(selectedEvaluation.evaluationDate)}</p>
-                      </div>
+                      {isEditing ? (
+                        <input
+                          type="date"
+                          name="evaluationDate"
+                          value={formatDateForInput(editFormData.evaluationDate) || ""}
+                          onChange={handleEditChange}
+                          className="w-full bg-transparent focus:outline-none text-gray-700 text-sm"
+                          required
+                        />
+                      ) : (
+                        <div>
+                          <p className="text-xs text-gray-500">Evaluation Date</p>
+                          <p className="text-sm text-gray-800">{formatDate(selectedEvaluation.evaluationDate)}</p>
+                        </div>
+                      )}
                     </div>
 
-                    {(selectedEvaluation.pdfPath || selectedEvaluation.imagePath) && (
+                    {/* Next Schedule Date */}
+                    <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                      <FaCalendarAlt className="text-teal-600 text-xs" />
+                      {isEditing ? (
+                        <input
+                          type="date"
+                          name="nextScheduleDate"
+                          value={formatDateForInput(editFormData.nextScheduleDate) || ""}
+                          onChange={handleEditChange}
+                          className="w-full bg-transparent focus:outline-none text-gray-700 text-sm"
+                          required
+                        />
+                      ) : (
+                        <div>
+                          <p className="text-xs text-gray-500">Next Schedule Date</p>
+                          <p className="text-sm text-gray-800">{formatDate(selectedEvaluation.nextScheduleDate)}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Maintenance Type */}
+                    <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                      <FaClipboardCheck className="text-teal-600 text-xs" />
+                      {isEditing ? (
+                        <select
+                          name="maintenanceType"
+                          value={editFormData.maintenanceType || ""}
+                          onChange={handleEditChange}
+                          className="w-full bg-transparent focus:outline-none text-gray-700 text-sm"
+                          required
+                        >
+                          <option value="">Select Maintenance Type</option>
+                          {maintenanceTypes.map((type) => (
+                            <option key={type} value={type}>
+                              {type === "shutdown" ? "Shutdown" : "Special Maintenance"}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <div>
+                          <p className="text-xs text-gray-500">Maintenance Type</p>
+                          <p className="text-sm text-gray-800">
+                            {selectedEvaluation.maintenanceType === "shutdown" ? "Shutdown" : "Special Maintenance"}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* File Uploads (Edit Mode Only) */}
+                    {isEditing && (
+                      <>
+                        <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                          <FaFilePdf className="text-teal-600 text-xs" />
+                          <input
+                            type="file"
+                            name="pdfFile"
+                            onChange={handleFileChange}
+                            accept=".pdf"
+                            className="w-full bg-transparent focus:outline-none text-gray-700 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+                          />
+                        </div>
+
+                        <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                          <FaImage className="text-teal-600 text-xs" />
+                          <input
+                            type="file"
+                            name="imageFile"
+                            onChange={handleFileChange}
+                            accept="image/*"
+                            className="w-full bg-transparent focus:outline-none text-gray-700 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+                          />
+                        </div>
+                      </>
+                    )}
+
+                    {/* Attachments (View Mode Only) */}
+                    {!isEditing && (selectedEvaluation.pdfPath || selectedEvaluation.imagePath) && (
                       <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
                         <p className="text-xs text-gray-500 mb-2">Attachments</p>
                         <div className="flex space-x-4">
@@ -426,13 +701,49 @@ export default function View_Post_Evaluation() {
                     )}
                   </div>
 
-                  <div className="mt-6 flex justify-end">
-                    <button
-                      onClick={() => setShowModal(false)}
-                      className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-sm hover:bg-gray-300 transition-colors"
-                    >
-                      Close
-                    </button>
+                  <div className="mt-6 flex justify-end space-x-3">
+                    {isEditing ? (
+                      <>
+                        <button
+                          onClick={handleCancelEdit}
+                          className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-sm hover:bg-gray-300 transition-colors flex items-center"
+                          disabled={saveLoading}
+                        >
+                          <FaTimes className="mr-1" /> Cancel
+                        </button>
+                        <button
+                          onClick={handleSaveEdit}
+                          className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-4 py-2 rounded-lg text-sm hover:from-teal-600 hover:to-cyan-600 transition-colors flex items-center"
+                          disabled={saveLoading}
+                        >
+                          {saveLoading ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <FaSave className="mr-1" /> Save Changes
+                            </>
+                          )}
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => setShowModal(false)}
+                          className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-sm hover:bg-gray-300 transition-colors"
+                        >
+                          Close
+                        </button>
+                        <button
+                          onClick={handleEdit}
+                          className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-4 py-2 rounded-lg text-sm hover:from-teal-600 hover:to-cyan-600 transition-colors flex items-center"
+                        >
+                          <FaEdit className="mr-1" /> Edit
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

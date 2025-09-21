@@ -21,6 +21,15 @@ const pmEvaluationSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+  nextScheduleDate: {
+    type: Date,
+    required: true
+  },
+  maintenanceType: {
+    type: String,
+    required: true,
+    enum: ["shutdown", "specialMaintenance"] // Restrict to these values
+  },
   pdfPath: {
     type: String,
     default: ""

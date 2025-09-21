@@ -11,7 +11,10 @@ import {
   FaImage,
   FaCalendarAlt,
   FaStickyNote,
-  FaTools
+  FaTools,
+  FaCalendarPlus,
+  FaPowerOff,
+  FaWrench
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -23,6 +26,8 @@ export default function PM_Post_Evaluation() {
     checkType: "",
     specialNotes: "",
     evaluationDate: new Date().toISOString().split('T')[0],
+    nextScheduleDate: "",
+    maintenanceType: "", // New field for radio buttons
     pdfFile: null,
     imageFile: null
   });
@@ -101,7 +106,7 @@ export default function PM_Post_Evaluation() {
       );
 
       alert(response.data.message || "PM Evaluation saved successfully");
-      navigate("/View_PM_Evaluations");
+      navigate("/View_Post_Evaluation");
     } catch (error) {
       console.error("Submission error:", error);
       if (error.response) {
@@ -126,15 +131,15 @@ export default function PM_Post_Evaluation() {
         <nav className="mt-5">
           <ul className="space-y-2">
             <li
-                          className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-                          onClick={() => navigate("/Machine_view")}
-                        >
-                          <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-                          <span className="text-sm group-hover:text-gray-200">
-                            View Machines
-                          </span>
-                        </li>
-                        <li
+              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
+              onClick={() => navigate("/Machine_view")}
+            >
+              <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
+              <span className="text-sm group-hover:text-gray-200">
+                View Machines
+              </span>
+            </li>
+            <li
               className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
               onClick={() => navigate("/View_Maintenance_Schedule")}
             >
@@ -166,7 +171,7 @@ export default function PM_Post_Evaluation() {
               onClick={() => navigate("/View_Leave")}
             >
               <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View PM Evaluations</span>
+              <span className="text-sm group-hover:text-gray-200">View leave record</span>
             </li>
           </ul>
         </nav>
@@ -280,6 +285,54 @@ export default function PM_Post_Evaluation() {
                     className="w-full bg-transparent focus:outline-none text-gray-700 text-sm"
                     required
                   />
+                </div>
+
+                {/* Next Schedule Date Input */}
+                <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                  <FaCalendarPlus className="text-teal-600 text-xs" />
+                  <input
+                    type="date"
+                    name="nextScheduleDate"
+                    value={formData.nextScheduleDate}
+                    onChange={handleChange}
+                    className="w-full bg-transparent focus:outline-none text-gray-700 text-sm"
+                    required
+                  />
+                </div>
+
+                {/* Maintenance Type Radio Buttons - NEW SECTION */}
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                  <p className="text-sm font-medium text-gray-700 mb-2">Maintenance Type:</p>
+                  <div className="flex space-x-6">
+                    <label className="flex items-center cursor-pointer">
+                      <input
+                        type="radio"
+                        name="maintenanceType"
+                        value="shutdown"
+                        checked={formData.maintenanceType === "shutdown"}
+                        onChange={handleChange}
+                        className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300"
+                        required
+                      />
+                      <span className="ml-2 text-sm text-gray-700 flex items-center">
+                        <FaPowerOff className="mr-1 text-xs" /> Shutdown
+                      </span>
+                    </label>
+                    <label className="flex items-center cursor-pointer">
+                      <input
+                        type="radio"
+                        name="maintenanceType"
+                        value="specialMaintenance"
+                        checked={formData.maintenanceType === "specialMaintenance"}
+                        onChange={handleChange}
+                        className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300"
+                        required
+                      />
+                      <span className="ml-2 text-sm text-gray-700 flex items-center">
+                        <FaWrench className="mr-1 text-xs" /> Special Maintenance
+                      </span>
+                    </label>
+                  </div>
                 </div>
 
                 {/* PDF Upload */}

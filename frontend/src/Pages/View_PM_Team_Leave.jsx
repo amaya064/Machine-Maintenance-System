@@ -146,7 +146,7 @@ const handleSubmit = async (e) => {
               onClick={() => navigate("/view_Admin_tool")}
             >
               <FaTools className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View Admin tool</span>
+              <span className="text-sm group-hover:text-gray-200">view Admin tool</span>
             </li>
             <li
               className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
@@ -160,7 +160,7 @@ const handleSubmit = async (e) => {
               onClick={() => navigate("/View_Leave")}
             >
               <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View PM Evaluations</span>
+              <span className="text-sm group-hover:text-gray-200">View leave record</span>
             </li>
           </ul>
         </nav>
