@@ -7,13 +7,17 @@ import {
 
 export default function Pre_Check_List() {
   const [employees, setEmployees] = useState([
-    { id: 1, epf: '31', name: 'John Doe', team: 'Ex', status: null },
-    { id: 2, epf: '453', name: 'Jane Smith', team: 'Technician', status: null },
-    { id: 3, epf: '1159', name: 'Mike Johnson', team: 'Technician', status: null },
-    { id: 4, epf: '646', name: 'Sarah Wilson', team: 'Technician', status: null },
-    { id: 5, epf: '42', name: 'David Brown', team: 'Supervisor', status: null },
-    { id: 5, epf: '42', name: 'David Brown', team: 'Supervisor', status: null },
-    { id: 5, epf: '42', name: 'David Brown', team: 'Supervisor', status: null },
+    { id: 1, epf: '31', name: 'Lasantha Perera', team: 'Ex', status: null },
+    { id: 2, epf: '453', name: 'Asiri Adikari', team: 'Technician', status: null },
+    { id: 3, epf: '1159', name: 'Dilan Achintha', team: 'Technician', status: null },
+    { id: 4, epf: '646', name: 'Akila Marasinghe', team: 'Technician', status: null },
+    { id: 5, epf: '42', name: 'Chaminda Gavesh', team: 'Supervisor', status: null },
+    { id: 6, epf: '116', name: 'Chameera Ramanayake', team: 'Supervisor', status: null },
+    { id: 7, epf: '38', name: 'Sameera Rathnayake', team: 'Supervisor', status: null },
+    { id: 8, epf: '2315', name: 'Damith Dananjaya', team: 'Technician', status: null },
+    { id: 9, epf: '2316', name: 'Kasun Dushmantha', team: 'Technician', status: null },
+    { id: 10, epf: '288', name: 'Senarath Samarakoon', team: 'Supervisor', status: null },
+    { id: 11, epf: '672', name: 'Viraj Silva', team: 'Technician', status: null },
   ]);
 
   const navigate = useNavigate();
