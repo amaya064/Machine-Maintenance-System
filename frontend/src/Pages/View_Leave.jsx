@@ -195,14 +195,8 @@ export default function View_Leave() {
               <span className="text-sm group-hover:text-gray-200">View Leave Records</span>
             </li>
 
-            <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/Pre_Check_List")}
-            >
-              <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View Pre check list</span>
-            </li>
             
+
           </ul>
         </nav>
       </aside>

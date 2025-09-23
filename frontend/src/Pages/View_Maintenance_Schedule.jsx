@@ -18,7 +18,7 @@ import {
   FaTrash,
   FaArrowLeft,
   FaFilePdf,
-  FaDownload
+  FaDownload,
 } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -80,8 +80,43 @@ export default function View_Maintenance_Schedule() {
     });
   };
 
-  // Function to download PDF for a single record
-  const downloadSinglePDF = (schedule) => {
+  // Function to download the uploaded PDF file
+  const downloadPDF = async (schedule) => {
+    if (!schedule.pdfFile) {
+      alert('No PDF file available for this schedule.');
+      return;
+    }
+
+    try {
+      // Fetch the PDF file from the server
+      const response = await axios.get(`http://localhost:3000/${schedule.pdfFile}`, {
+        responseType: 'blob'
+      });
+      
+      // Create a blob from the PDF data
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(blob);
+      
+      // Create a temporary anchor element to trigger the download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Maintenance_Schedule_${schedule.machineName}_${schedule.month}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      
+      // Clean up
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      alert('Failed to download PDF file.');
+    }
+  };
+
+  // Function to download PDF for a single record (generated)
+  const downloadGeneratedPDF = (schedule) => {
     const doc = new jsPDF();
     
     // Add title
@@ -272,13 +307,7 @@ const downloadAllPDF = () => {
               <span className="text-sm group-hover:text-gray-200">View Leave Records</span>
             </li>
 
-            <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/Pre_Check_List")}
-            >
-              <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View Pre check list</span>
-            </li>
+            
             
           </ul>
         </nav>
@@ -371,6 +400,9 @@ const downloadAllPDF = () => {
                         Frequency
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        PDF Document
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                       </th>
                     </tr>
@@ -415,6 +447,20 @@ const downloadAllPDF = () => {
                             {schedule.frequency}
                           </span>
                         </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          {schedule.pdfFile ? (
+                            <button
+                              onClick={() => downloadPDF(schedule)}
+                              className="text-teal-600 hover:text-teal-800 flex items-center text-xs"
+                              title="Download Uploaded PDF"
+                            >
+                              <FaDownload className="mr-1" />
+                              Download PDF
+                            </button>
+                          ) : (
+                            <span className="text-xs text-gray-500">No PDF</span>
+                          )}
+                        </td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">
                             <button
@@ -425,9 +471,9 @@ const downloadAllPDF = () => {
                               <FaEdit />
                             </button>
                             <button
-                              onClick={() => downloadSinglePDF(schedule)}
+                              onClick={() => downloadGeneratedPDF(schedule)}
                               className="text-red-600 hover:text-red-900 p-1"
-                              title="Download PDF"
+                              title="Generate PDF"
                             >
                               <FaFilePdf />
                             </button>

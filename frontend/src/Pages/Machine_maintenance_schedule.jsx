@@ -11,8 +11,8 @@ import {
   FaCog,
   FaClipboardCheck,
   FaIdBadge,
-  FaUserTie,
-  FaIndustry
+  FaIndustry,
+  FaFilePdf
 } from 'react-icons/fa';
 
 export default function Machine_maintenance_schedule() {
@@ -31,7 +31,8 @@ export default function Machine_maintenance_schedule() {
     nextScheduleDate: '',
     frequency: '',
     pmTeam: '',
-    checkType: ''
+    checkType: '',
+    pdfFile: null 
   });
 
   // Check if we're in edit mode
@@ -55,7 +56,8 @@ export default function Machine_maintenance_schedule() {
         nextScheduleDate: formatDateForInput(location.state.scheduleData.nextScheduleDate),
         frequency: location.state.scheduleData.frequency,
         pmTeam: location.state.scheduleData.pmTeam,
-        checkType: location.state.scheduleData.checkType
+        checkType: location.state.scheduleData.checkType,
+        pdfFile: null 
       });
     }
   }, [location.state]);
@@ -124,7 +126,8 @@ export default function Machine_maintenance_schedule() {
           nextScheduleDate: '',
           frequency: '',
           pmTeam: '',
-          checkType: ''
+          checkType: '',
+          pdfFile: null
         });
         
         // Navigate back to view page after successful update
@@ -210,13 +213,7 @@ export default function Machine_maintenance_schedule() {
               <span className="text-sm group-hover:text-gray-200">View leave record</span>
             </li>
 
-            <li
-              className="flex items-center p-3 hover:bg-gray-700 rounded-md cursor-pointer transition-all group"
-              onClick={() => navigate("/Pre_Check_List")}
-            >
-              <FaClipboardCheck className="text-teal-400 text-sm mr-2 group-hover:text-teal-300" />
-              <span className="text-sm group-hover:text-gray-200">View Pre check list</span>
-            </li>
+            
 
           </ul>
         </nav>
@@ -408,6 +405,21 @@ export default function Machine_maintenance_schedule() {
                   </select>
                 </div>
               </div>
+
+              <div className="space-y-1 md:col-span-2">
+                  <label className="block text-xs font-medium text-gray-700">
+                    <FaFilePdf className="inline mr-1 text-teal-500 text-xs" />
+                    Upload PDF Document
+                  </label>
+                  <input
+                    type="file"
+                    name="pdfFile"
+                    onChange={handleChange}
+                    accept=".pdf"
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-teal-500 focus:border-teal-500 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+                  />
+                </div>
+              
 
               {/* Submit Button */}
               <div className="pt-2">
