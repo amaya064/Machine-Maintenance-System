@@ -448,19 +448,22 @@ const downloadAllPDF = () => {
                           </span>
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap">
-                          {schedule.pdfFile ? (
-                            <button
-                              onClick={() => downloadPDF(schedule)}
-                              className="text-teal-600 hover:text-teal-800 flex items-center text-xs"
-                              title="Download Uploaded PDF"
-                            >
-                              <FaDownload className="mr-1" />
-                              Download PDF
-                            </button>
-                          ) : (
-                            <span className="text-xs text-gray-500">No PDF</span>
-                          )}
-                        </td>
+  {schedule.pdfFile ? (
+    <a
+      href={`http://localhost:3000/${schedule.pdfFile}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-teal-600 hover:text-teal-800 flex items-center text-xs"
+      title="View PDF"
+    >
+      <FaFilePdf className="mr-1" />
+      View PDF
+    </a>
+  ) : (
+    <span className="text-xs text-gray-500">No PDF</span>
+  )}
+</td>
+
                         <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">
                             <button
