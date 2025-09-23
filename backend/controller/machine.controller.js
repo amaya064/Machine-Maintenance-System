@@ -148,7 +148,8 @@ export const createMaintenanceSchedule = async (req, res) => {
       nextScheduleDate,
       frequency,
       pmTeam,
-      checkType
+      checkType,
+      pdfFile 
     } = req.body;
 
     // Validate required fields
@@ -185,7 +186,8 @@ export const createMaintenanceSchedule = async (req, res) => {
       nextScheduleDate: new Date(nextScheduleDate),
       frequency,
       pmTeam,
-      checkType
+      checkType,
+      pdfFile 
     });
 
     await maintenanceSchedule.save();

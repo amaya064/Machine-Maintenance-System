@@ -13,7 +13,6 @@ import EmployeeRegistration from './Pages/EmployeeRegistration'
 import Machine_maintenance_schedule from './Pages/Machine_maintenance_schedule'
 import View_Maintenance_Schedule from './Pages/View_Maintenance_Schedule'
 import Pm_admin_tool from './Pages/pm_admin_tool'
-import Pre_Check_List from './Pages/Pre_Check_List'
 
 import PM_Post_Evaluation from './Pages/PM_Post_Evaluation'
 
@@ -50,7 +49,7 @@ export default function App() {
       
 
       <Route path="/View_Admin_tool" element={<View_Admin_tool />} />
-      <Route path="/Pre_Check_List" element={<Pre_Check_List />} />
+      
 
       
       

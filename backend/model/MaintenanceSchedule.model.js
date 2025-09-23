@@ -43,6 +43,10 @@ const maintenanceScheduleSchema = new mongoose.Schema(
       type: String, 
       required: true,
       enum: ['A-Check', 'B-Check', 'C-Check','D-Check','E-Check','F-Check','G-Check','H-Check','I-Check','J-Check','K-Check','Annual MTC']
+    },
+    pdfFile: { 
+      type: String,
+      default: null
     }
   },
   { timestamps: true }
