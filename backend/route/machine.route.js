@@ -7,7 +7,7 @@ import path from 'path';
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.mimetype === "application/pdf") {
-      cb(null, "pdf/");
+      cb(null, "../pdf/");
     } else {
       cb(new Error("Invalid file type"), false);
     }
