@@ -32,8 +32,8 @@ export default function Machine_maintenance_schedule() {
     frequency: '',
     pmTeam: '',
     checkType: '',
-    pdfFile: null 
   });
+  const [pdfFile, setPdfFile] = useState(null);
 
   // Check if we're in edit mode
   useEffect(() => {
@@ -57,7 +57,6 @@ export default function Machine_maintenance_schedule() {
         frequency: location.state.scheduleData.frequency,
         pmTeam: location.state.scheduleData.pmTeam,
         checkType: location.state.scheduleData.checkType,
-        pdfFile: null 
       });
     }
   }, [location.state]);
@@ -84,20 +83,46 @@ export default function Machine_maintenance_schedule() {
     });
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type === 'application/pdf') {
+      setPdfFile(file);
+    } else if (file) {
+      alert('Please select a PDF file only.');
+      e.target.value = ''; // Reset file input
+      setPdfFile(null);
+    } else {
+      setPdfFile(null);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      // Create FormData object to handle file upload
+      const submitData = new FormData();
+      
+      // Append form data
+      Object.keys(formData).forEach(key => {
+        submitData.append(key, formData[key]);
+      });
+      
+      // Append PDF file if selected
+      if (pdfFile) {
+        submitData.append('pdfFile', pdfFile);
+      }
+
       let response;
       if (editMode) {
         // Update existing schedule
         response = await axios.put(
           `http://localhost:3000/api/machines/schedules/${scheduleId}`,
-          formData,
+          submitData,
           {
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'multipart/form-data'
             }
           }
         );
@@ -105,10 +130,10 @@ export default function Machine_maintenance_schedule() {
         // Create new schedule
         response = await axios.post(
           'http://localhost:3000/api/machines/create',
-          formData,
+          submitData,
           {
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'multipart/form-data'
             }
           }
         );
@@ -127,8 +152,12 @@ export default function Machine_maintenance_schedule() {
           frequency: '',
           pmTeam: '',
           checkType: '',
-          pdfFile: null
         });
+        setPdfFile(null);
+        
+        // Reset file input
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput) fileInput.value = '';
         
         // Navigate back to view page after successful update
         if (editMode) {
@@ -406,20 +435,25 @@ export default function Machine_maintenance_schedule() {
                 </div>
               </div>
 
+              {/* PDF File Upload */}
               <div className="space-y-1 md:col-span-2">
-                  <label className="block text-xs font-medium text-gray-700">
-                    <FaFilePdf className="inline mr-1 text-teal-500 text-xs" />
-                    Upload PDF Document
-                  </label>
-                  <input
-                    type="file"
-                    name="pdfFile"
-                    onChange={handleChange}
-                    accept=".pdf"
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-teal-500 focus:border-teal-500 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
-                  />
-                </div>
-              
+                <label className="block text-xs font-medium text-gray-700">
+                  <FaFilePdf className="inline mr-1 text-teal-500 text-xs" />
+                  Upload PDF Document
+                </label>
+                <input
+                  type="file"
+                  name="pdfFile"
+                  onChange={handleFileChange}
+                  accept=".pdf"
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-teal-500 focus:border-teal-500 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
+                />
+                {pdfFile && (
+                  <p className="text-xs text-green-600 mt-1">
+                    Selected file: {pdfFile.name}
+                  </p>
+                )}
+              </div>
 
               {/* Submit Button */}
               <div className="pt-2">
