@@ -82,14 +82,17 @@ export default function View_Maintenance_Schedule() {
 
   // Function to download the uploaded PDF file
   const downloadPDF = async (schedule) => {
-    if (!schedule.pdfFile) {
+    if (!schedule.pdfPath) { // Changed from pdfFile to pdfPath
       alert('No PDF file available for this schedule.');
       return;
     }
 
     try {
+      // Extract just the filename from the full path
+      const filename = schedule.pdfPath.split('/').pop();
+      
       // Fetch the PDF file from the server
-      const response = await axios.get(`http://localhost:3000/${schedule.pdfFile}`, {
+      const response = await axios.get(`http://localhost:3000/pdf/${filename}`, { // Updated URL
         responseType: 'blob'
       });
       
@@ -151,6 +154,38 @@ export default function View_Maintenance_Schedule() {
     // Save the PDF
     doc.save(`Maintenance_Schedule_${schedule.machineName}_${schedule.month}.pdf`);
   };
+
+  // Function to view the uploaded PDF file
+// Function to view the uploaded PDF file
+const viewPDF = async (schedule) => {
+  if (!schedule.pdfPath) {
+    alert('No PDF file available for this schedule.');
+    return;
+  }
+
+  try {
+    // Extract just the filename from the full path (handle both cases)
+    let filename = schedule.pdfPath;
+    
+    // Remove the "pdf/" prefix if it exists
+    if (filename.startsWith('pdf/')) {
+      filename = filename.replace('pdf/', '');
+    }
+    
+    // Remove any path components and get just the filename
+    filename = filename.split('/').pop();
+    
+    // Create a URL to view the PDF
+    const pdfUrl = `http://localhost:3000/pdf/${filename}`;
+    console.log('Attempting to open PDF:', pdfUrl); // For debugging
+    
+    // Open the PDF in a new tab
+    window.open(pdfUrl, '_blank');
+  } catch (error) {
+    console.error('Error viewing PDF:', error);
+    alert('Failed to open PDF file. Please check if the file exists.');
+  }
+};
 
   
 // Function to download PDF for all records
@@ -399,7 +434,9 @@ const downloadAllPDF = () => {
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Frequency
                       </th>
-                      
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        PDF File
+                      </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                       </th>
@@ -445,8 +482,22 @@ const downloadAllPDF = () => {
                             {schedule.frequency}
                           </span>
                         </td>
-                        
-
+                        <td className="px-4 py-4 whitespace-nowrap">
+  <div className="text-sm text-gray-900">
+    {schedule.pdfPath ? (
+      <button
+        onClick={() => viewPDF(schedule)}
+        className="text-blue-600 hover:text-blue-800 flex items-center text-xs"
+        title="View PDF"
+      >
+        <FaEye className="mr-1" />
+        View PDF
+      </button>
+    ) : (
+      <span className="text-gray-400 text-xs">No PDF</span>
+    )}
+  </div>
+</td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">
                             <button

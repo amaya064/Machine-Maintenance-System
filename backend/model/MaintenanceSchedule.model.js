@@ -1,4 +1,3 @@
-// model/MaintenanceSchedule.model.js
 import mongoose from 'mongoose';
 
 const maintenanceScheduleSchema = new mongoose.Schema(
@@ -37,16 +36,16 @@ const maintenanceScheduleSchema = new mongoose.Schema(
     pmTeam: { 
       type: String, 
       required: true,
-      enum: Array.from({length: 20}, (_, i) => `PMT-${(i + 1).toString().padStart(2, '0')}`)
+      enum: Array.from({length: 26}, (_, i) => `PMT-${(i + 1).toString().padStart(2, '0')}`)
     },
     checkType: { 
       type: String, 
       required: true,
       enum: ['A-Check', 'B-Check', 'C-Check','D-Check','E-Check','F-Check','G-Check','H-Check','I-Check','J-Check','K-Check','Annual MTC']
     },
-    pdfFile: { 
+    pdfPath: {  // Changed from pdfFile to pdfPath to match PM_Post_Evaluation
       type: String,
-      default: null
+      default: ""
     }
   },
   { timestamps: true }
