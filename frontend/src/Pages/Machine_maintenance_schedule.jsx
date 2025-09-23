@@ -185,7 +185,7 @@ export default function Machine_maintenance_schedule() {
 
   const frequencies = ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Half-Yearly', 'Yearly'];
   
-  const pmTeams = Array.from({length: 26}, (_, i) => `PMT-${(i + 1).toString().padStart(2, '0')}`);
+  const pmTeams = Array.from({length: 2}, (_, i) => `PMT-${(i + 1).toString().padStart(2, '0')}`);
   
   const checkTypes = ['A-Check', 'B-Check', 'C-Check','D-Check','E-Check','F-Check','G-Check','H-Check','I-Check','J-Check','K-Check','Annual MTC'];
 
