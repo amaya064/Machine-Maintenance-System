@@ -399,9 +399,7 @@ const downloadAllPDF = () => {
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Frequency
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        PDF Document
-                      </th>
+                      
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                       </th>
@@ -447,22 +445,7 @@ const downloadAllPDF = () => {
                             {schedule.frequency}
                           </span>
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
-  {schedule.pdfFile ? (
-    <a
-      href={`http://localhost:3000/${schedule.pdfFile}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-teal-600 hover:text-teal-800 flex items-center text-xs"
-      title="View PDF"
-    >
-      <FaFilePdf className="mr-1" />
-      View PDF
-    </a>
-  ) : (
-    <span className="text-xs text-gray-500">No PDF</span>
-  )}
-</td>
+                        
 
                         <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">
