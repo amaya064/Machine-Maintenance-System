@@ -295,13 +295,7 @@ export default function Machine_view() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">
-                            <button
-                              onClick={() => navigate(`/machine-details/${machine._id}`)}
-                              className="text-teal-600 hover:text-teal-900 p-1.5 rounded hover:bg-teal-50 transition-colors"
-                              title="View Details"
-                            >
-                              <FaEye className="text-xs" />
-                            </button>
+                            
                             <button
   onClick={() => navigate(`/New_machine_registration/${machine._id}`)}
   className="text-blue-600 hover:text-blue-900 p-1.5 rounded hover:bg-blue-50 transition-colors"
