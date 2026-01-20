@@ -131,7 +131,8 @@ export default function Navigation() {
           </div>
         </div>
 
-        {/* User Profile or Login Button */}
+
+        {/* User Profile or Login Button 
         <div className="hidden lg:flex items-center space-x-2">
           {email ? (
             <div className="flex items-center space-x-2">
@@ -161,7 +162,7 @@ export default function Navigation() {
             </Link>
           )}
         </div>
-
+*/}
         {/* Mobile user menu */}
         {email && (
           <div className={`lg:hidden absolute top-full left-0 w-full bg-gray-800 px-4 py-3 shadow-xl ${menuOpen ? "block" : "hidden"} border-t border-gray-700`}>
